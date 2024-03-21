@@ -50,7 +50,10 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
-    // Add the dependency for the Cloud Storage library
+    // Using BoM - Version specification isn't necessary as per Documentation -
+    // The dependency for the Cloud Storage library
     implementation("com.google.firebase:firebase-storage")
+    // The dependency for the Firebase Realtime Database:
+    implementation("com.google.firebase:firebase-database-ktx")
 
 }

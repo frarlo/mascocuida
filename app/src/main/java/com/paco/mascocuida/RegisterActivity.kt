@@ -22,8 +22,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
+import com.paco.mascocuida.data.User
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -48,6 +52,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     // Lo mismo para Firebase storage:
     private lateinit var storage: FirebaseStorage
+    // Base de datos:
+    private lateinit var database: FirebaseDatabase
+    private lateinit var databaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +85,10 @@ class RegisterActivity : AppCompatActivity() {
         storage = Firebase.storage
         // Declaramos e inicializamos la referencia de storage:
         val storageRef = storage.reference
+
+        // Inicializamos la base de datos:
+        database = FirebaseDatabase.getInstance("https://mascocuida-a-default-rtdb.europe-west1.firebasedatabase.app")
+        databaseRef = Firebase.database.reference
 
 
         // Usamos PhotoPicker https://developer.android.com/training/data-storage/shared/photopicker
@@ -141,25 +152,40 @@ class RegisterActivity : AppCompatActivity() {
                         // Subimos la imagen
                         val uploadTask = profilePicsRef.putFile(file)
 
+                        var profilePicUrl: String? = null
+
                         // Register observers to listen for when the download is done or if it fails
                         uploadTask.addOnFailureListener {
                             Log.d("Ejecución dentro del bloque Firebase Storage HA FALLADO","ERROR en $uploadTask")
 
                         }.addOnSuccessListener { taskSnapshot ->
                             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                            // ...
-                            Log.d("Ejecución CORRECTA ","TOdo ha ido bien subiendo la imagen...")
+                            taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
+                                // Guardamos el enlace a la imagen de perfil en una constante:
+                                profilePicUrl = uri.toString()
+                                // Si el usuario ha marcado su rol como cuidador...
+                                if(userCarerRole.isChecked){
+                                    Log.d("Ejecución entra a bucle de userCarerRole.isChecked","Por ahora bien")
+                                    // Crea un documento en la colección de cuidadores:
+                                    val newCarer = User(userId,"Carer",userName, userLastname, userLocation,
+                                        profilePicUrl,userEmail)
+
+                                    // Lo introducimos en la colección:
+                                    registerNewCarer(userId,newCarer)
+
+                                    // Si la ejecución llega aquí es que es el otro rol el que está seleccionado:
+                                }else{
+                                    // Crea un documento en la colección de dueños:
+                                    val newOwner = User(userId,"Owner",userName, userLastname, userLocation,
+                                        profilePicUrl,userEmail)
+
+                                    registerNewOwner(userId,newOwner)
+                                }
+                            }
+
                         }
 
-                        // Si el usuario ha marcado su rol como cuidador...
-                        if(userCarerRole.isChecked){
-                            // Crea un documento en la colección de cuidadores:
 
-                        // Si la ejecución llega aquí es que es el otro rol el que está seleccionado:
-                        }else{
-                            // Crea un documento en la colección de dueños:
-
-                        }
 
                     }
 
@@ -212,5 +238,17 @@ class RegisterActivity : AppCompatActivity() {
 
     // Función para actualizar la interfaz con el Usuario - Documentación de Firebase
     private fun updateUI(user: FirebaseUser?) {
+    }
+
+    // Registra al usuario con su id de Firebase auth y la información del constructor:
+    private fun registerNewOwner(userId: String, newOwner: User){
+
+        databaseRef.child("owners").child(userId).setValue(newOwner)
+    }
+
+    private fun registerNewCarer(userId: String, newCarer: User){
+        Log.d("registerNewCarer","Ejecución en método de inserción")
+        databaseRef.child("carers").child(userId).setValue(newCarer)
+
     }
 }
