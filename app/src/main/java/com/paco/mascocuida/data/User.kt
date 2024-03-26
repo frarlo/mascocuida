@@ -6,11 +6,37 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class User(
-    val userUid: String,
-    val userRole: String? = null,
-    val userName: String? = null,
-    val userLastname: String? = null,
-    val userLocation: String? = null,
-    val userPic: String? = null,
-    val userEmail: String? = null,
-)
+    private val userUid: String? = null,
+    private val userRole: String? = null,
+    private val userName: String? = null,
+    private val userLastname: String? = null,
+    private val userLocation: String? = null,
+    private val userPic: String? = null,
+    private val userEmail: String? = null
+) {
+    fun getUserUid(): String?{
+        return userUid
+    }
+
+    fun getUserRole(): String? {
+        return userRole
+    }
+
+    fun getUserName(): String?{
+        return userName
+    }
+
+    fun getUserLastname(): String?{
+        return userLastname
+    }
+
+    fun getUserLocation(): String?{
+        return userLocation
+    }
+    fun getUserPic(): String?{
+        return userPic
+    }
+    fun getEmail(): String?{
+        return userEmail
+    }
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ProfileActivity"
+    android:background="@color/mascopurple">
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager_profile"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.35" />
+
+    <TextView
+        android:id="@+id/textview_username"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Rigoberto Cuidador Jiménez"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/viewpager_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textview_stars"
+        app:layout_constraintHeight_percent="0.10" />
+
+    <TextView
+        android:id="@+id/textview_stars"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="4.9/5"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/viewpager_profile"
+        app:layout_constraintStart_toEndOf="@id/textview_username"
+        app:layout_constraintEnd_toEndOf="@+id/image_star"
+        app:layout_constraintHeight_percent="0.10"
+        app:layout_constraintWidth_percent="0.20"/>
+
+    <ImageView
+        android:id="@+id/image_star"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/rating_star"
+        android:gravity="center"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/viewpager_profile"
+        app:layout_constraintStart_toEndOf="@id/textview_stars"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.10"
+        app:layout_constraintWidth_percent="0.20"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_reviews"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/textview_username"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.45" />
+
+    <Button
+        android:id="@+id/button_action"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Botón dinámico"
+        app:layout_constraintTop_toBottomOf="@id/recyclerview_reviews"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
