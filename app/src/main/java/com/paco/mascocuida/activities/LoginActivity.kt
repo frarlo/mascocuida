@@ -1,5 +1,6 @@
 package com.paco.mascocuida.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -61,6 +62,9 @@ class LoginActivity : AppCompatActivity() {
         // Inicializamos la interfaz de autentificación de Firebase:
         auth = Firebase.auth
 
+        // Inicializamos una instancia de SharedPreferences para guardar los datos de logueo:
+        val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
+
         // Listener del botón de Registro:
         buttonRegister.setOnClickListener{
             val intent = Intent(this, RegisterActivity::class.java)
@@ -82,43 +86,41 @@ class LoginActivity : AppCompatActivity() {
             val userPassword = userPassword.text.toString()
 
             // Comprobamos si el usuario ha introducido algo en los dos campos:
-            if (checkFields(userEmail, userPassword)) {
+           if (checkFields(userEmail, userPassword)) {
                 Log.d("LoginActivity","Usuario ha puesto email y contraseña")
                 auth.signInWithEmailAndPassword(userEmail, userPassword)
                     .addOnCompleteListener(this) { task ->
-                        Log.d("LoginActivity","Usuario se ha logueado")
+                        Log.d( "LoginActivity","Usuario se ha logueado")
                         if (task.isSuccessful) {
-                            // Se loguea
-                            val user = auth.currentUser
-                            updateUI(user)
-                            //TODO: Inicio Actividad en función del rol:
 
+                            val user = auth.currentUser
                             var userRole: String? = null
                             val userUid = user?.uid.toString()
 
                             CoroutineScope(Dispatchers.Main).launch {
                                 Log.d("LoginActivity","Lanzando corrutina para sacar el objeto con $userUid")
                                 val objectUser = FirebaseDatabaseModel.getUserFromFirebase(userUid)
-                                Log.d("LoginActivity","objectUser is $objectUser")
                                 if (objectUser != null) {
-                                    userRole = objectUser.getUserRole()
-                                    Log.d("LoginActivity","userRole has returned $userRole")
+                                    userRole = objectUser.getRole()
                                 }
 
-                                // CRUD: Tenemos que averiguar el ROL del usuario antes de ejecutar una u otra actividad:
-                                // El userId es el nombre del documento que puede estar en una colección o en otra.
+                                // Guardamos el rol para manejar de forma más simple el logueo automático:
+                                sharedPreferences.edit().apply(){
+                                    putString("userRole",userRole)
+                                    apply()
+                                }
 
                                 if(userRole.equals("Owner")) {
-                                    makeToast("DUEÑO. Variable: $userRole")
+                                    makeToast("DUEÑO. Variable: $userRole") //DEBUG TODO - DELETE
                                     val intent = Intent(this@LoginActivity, OwnerActivity::class.java)
                                     startActivity(intent)
                                 }else if(userRole.equals("Carer")){
-                                    makeToast("CUIDADOR. Variable: $userRole")
+                                    makeToast("CUIDADOR. Variable: $userRole") //DEBUG TODO - DELETE
                                     val intent = Intent(this@LoginActivity, CarerActivity::class.java)
 
                                     startActivity(intent)
                                 }else {
-                                    makeToast("Ejecución no supo obtener el rol: $userRole")
+                                    makeToast("Ejecución no supo obtener el rol: $userRole") //DEBUG TODO - DELETE
                                 }
 
 
@@ -142,11 +144,6 @@ class LoginActivity : AppCompatActivity() {
     // Función para comprobar si están vacíos los campos introducibles:
     private fun checkFields(userEmail: String, userPassword: String): Boolean{
         return userEmail.isNotEmpty() || userPassword.isNotEmpty()
-    }
-
-    // Función para actualizar la interfaz con el Usuario - Documentación de Firebase
-    private fun updateUI(user: FirebaseUser?) {
-        // TODO
     }
 
     // Función que instancia e infla un pop-up que se encarga de reiniciar la contraseña del usuario:
@@ -173,7 +170,6 @@ class LoginActivity : AppCompatActivity() {
 
                     FirebaseAuthModel.forgottenFirebaseCredentials(email)
                     makeToast("Comprueba tu correo electrónico")
-
 
                 }else{
                     makeToast("Introduce un correo válido")

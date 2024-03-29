@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ManagePetActivity"
+    android:background="@color/mascopurple">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_margin="40dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registra una nueva mascota"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:padding="20dp"/>
+
+            <EditText
+                android:id="@+id/text_pet_name"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:textColor="@color/black"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Especie"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:padding="20dp"/>
+
+            <Spinner
+                android:id="@+id/spinner_species"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:entries="@array/species"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Qué tamaño tiene?"
+            android:textColor="@color/white"
+            android:padding="20dp"/>
+
+        <RadioGroup
+            android:id="@+id/radio_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <RadioButton
+                android:id="@+id/radio_size_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:checked="true"
+                android:text="Pequeño (1-10 Kg)"/>
+            <RadioButton
+                android:id="@+id/radio_size_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Mediano (11-25 Kg)"/>
+            <RadioButton
+                android:id="@+id/radio_size_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Grande (+25 Kg)"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Qué edad tiene?"
+            android:textColor="@color/white"
+            android:padding="20dp"/>
+
+        <RadioGroup
+            android:id="@+id/radio_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <RadioButton
+                android:id="@+id/radio_age_junior"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:checked="true"
+                android:text="Menos de un año (Cachorro)"/>
+            <RadioButton
+                android:id="@+id/radio_age_adult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Entre uno y diez años (Adulto)"/>
+            <RadioButton
+                android:id="@+id/radio_age_senior"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Más de diez años (Senior)"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Se lleva bien con..."
+            android:textColor="@color/white"
+            android:padding="20dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/check_likes_dogs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perros"
+                android:textColor="@color/white"
+                android:padding="10dp"/>
+
+            <CheckBox
+                android:id="@+id/check_likes_cats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gatos"
+                android:textColor="@color/white"
+                android:padding="10dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sexo"
+            android:textColor="@color/white"
+            android:padding="20dp"/>
+
+
+        <RadioGroup
+            android:id="@+id/radio_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <RadioButton
+                android:id="@+id/radio_sex_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:checked="true"
+                android:text="Macho"/>
+            <RadioButton
+                android:id="@+id/radio_sex_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Hembra"/>
+        </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/check_sterilised"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Está esterilizado?"
+            android:textColor="@color/white"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guardar"/>
+
+        <!-- TODO: Controlar este botón si se carga una mascota -->
+        <Button
+            android:id="@+id/button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eliminar mascota"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
+</ScrollView>

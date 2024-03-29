@@ -11,10 +11,9 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:layout_margin="20dp"
         android:src="@drawable/logo_long"
-        android:text="MASCOCUIDA"
         android:textSize="40sp"
         android:textColor="@color/white"/>
 
@@ -46,29 +45,37 @@
         android:id="@+id/button_pets"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="Mis mascotas" />
 
     <Button
         android:id="@+id/button_services"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="Mis cuidados" />
 
     <Button
         android:id="@+id/button_carers"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="Buscar cuidadores" />
 
     <Button
         android:id="@+id/button_profile"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="Modificar mi perfil" />
+
+    <Button
+        android:id="@+id/button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_margin="10dp"
+        android:background="@color/black"
+        android:text="Cerrar sesión" />
 
 
 </LinearLayout>

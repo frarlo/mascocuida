@@ -11,7 +11,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:layout_margin="20dp"
         android:src="@drawable/logo_long"
         android:textSize="40sp"
@@ -46,22 +46,30 @@
         android:id="@+id/button_requests"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="Ver solicitudes" />
 
     <Button
         android:id="@+id/button_services"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="Mis cuidados" />
 
     <Button
         android:id="@+id/button_profile"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="Modificar mi perfil" />
+
+    <Button
+        android:id="@+id/button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_margin="10dp"
+        android:background="@color/black"
+        android:text="Cerrar sesión" />
 
 
 </LinearLayout>

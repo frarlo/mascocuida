@@ -143,7 +143,8 @@ class RegisterActivity : AppCompatActivity() {
 
                     // Creamos una nueva corrutina en la que lanzamos los procesos asíncronos de registro y perfil:
                     CoroutineScope(Dispatchers.Main).launch {
-                            FirebaseAuthModel.createFirebaseUser(userEmail,userPassword)
+
+                        FirebaseAuthModel.createFirebaseUser(userEmail,userPassword)
                         // Extraemos el identificador único del usuario, que lo identifica de manera única
                         //val userId = Firebase.auth.currentUser?.uid.toString()
                         val user = FirebaseAuth.getInstance().currentUser
@@ -153,17 +154,6 @@ class RegisterActivity : AppCompatActivity() {
 
                         // El userId no es nulo, así que podemos seguir con el registro de sus datos:
                         if (!userId.isNullOrEmpty()){
-
-
-
-                            // Declaramos el archivo a subir:
-                            //val file = picUri
-
-                            // Ponemos la referencia al Bucket que queremos (imágenes de perfil):
-                            //val profilePicsRef = storageRef.child("profile_pics/profile$userId")
-
-                            // Subimos la imagen
-                            //val uploadTask = profilePicsRef.putFile(file)
 
                             // Inicializamos la url de la imagen en el Bucket a nula:
                             var profilePicUrl: String? = null
@@ -180,8 +170,7 @@ class RegisterActivity : AppCompatActivity() {
 
                                     // Llamamos al método para introducirlo en la colección:
                                     FirebaseDatabaseModel.registerNewCarer(userId,newCarer) //TODO
-                                    // TODO CAMBIADO TEMPORALMENTE TODO
-                                    //FirebaseDatabaseModel.registerNewUser(userId,newCarer)
+
 
                                 }else{
                                     val newOwner = User(userId,"Owner",userName, userLastname, userLocation,

@@ -6,6 +6,11 @@
         <item>English</item>
     </string-array>
 
+    <string-array name="species">
+        <item>Perro</item>
+        <item>Gato</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_profile">ProfileActivity</string>
