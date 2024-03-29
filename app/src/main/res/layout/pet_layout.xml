@@ -1,43 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dp"
+    android:padding="2dp"
     android:layout_margin="5dp"
-    android:background="@color/white">
+    android:background="@color/mascoemphasis"
+    android:layout_gravity="start">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:padding="5dp"
-        android:background="@color/mascoemphasis">
+    <TextView
+        android:id="@+id/recycler_pet_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre mascota"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_gravity="start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recycler_pet_species"
+        />
 
-        <TextView
-            android:id="@+id/recycler_pet_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre mascota"
-            android:textColor="@color/white"
-            android:layout_marginEnd="10dp"/>
+    <TextView
+        android:id="@+id/recycler_pet_species"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Especie mascota"
+        android:layout_column="1"
+        android:textColor="@color/white"
+        android:layout_marginStart="10dp"
+        android:layout_gravity="start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintStart_toEndOf="@id/recycler_pet_name"
+        app:layout_constraintEnd_toStartOf="@id/recycler_pet_editbutton"/>
 
-        <TextView
-            android:id="@+id/recycler_pet_species"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Especie mascota"
-            android:textColor="@color/white"
-            android:layout_marginStart="10dp"/>
+    <Button
+        android:id="@+id/recycler_pet_editbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="2"
+        android:text="Editar"
+        android:layout_gravity="end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/mascoblue"/>
 
-        <Button
-            android:id="@+id/recycler_pet_editbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Editar"
-            android:layout_marginStart="10dp"/>
 
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

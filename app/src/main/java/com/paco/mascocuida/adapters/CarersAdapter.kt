@@ -1,6 +1,5 @@
 package com.paco.mascocuida.adapters
 
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.paco.mascocuida.R
 import com.paco.mascocuida.activities.ManagePetActivity
 import com.paco.mascocuida.data.Pet
+import com.paco.mascocuida.data.User
 
-// TODO - Adapter para mostrar las mascotas en el RecyclerView
-// https://developer.android.com/develop/ui/views/layout/recyclerview
-
-class PetsAdapter(private val petList: MutableList<Pet>): RecyclerView.Adapter<PetsAdapter.ViewHolder>(){
+class CarersAdapter(private val carerList: MutableList<User>): RecyclerView.Adapter<PetsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
@@ -24,18 +21,20 @@ class PetsAdapter(private val petList: MutableList<Pet>): RecyclerView.Adapter<P
         private val buttonEdit: Button = view.findViewById(R.id.recycler_pet_editbutton)
         private val context = view.context
 
-        fun bindPet(pet: Pet){
-            petName.text = pet.getName()
-            petSpecies.text = pet.getSpecies()
+        fun bindCarer(carer: User){
+
+            // Pet - adapter code:
+            //petName.text = pet.getName()
+            //petSpecies.text = pet.getSpecies()
 
 
-            buttonEdit.setOnClickListener {
-                //TODO implement selection and edition in "ActivityManagePet"
-                val petUid = pet.getPetUid()
-                val intent = Intent(context,ManagePetActivity::class.java)
-                intent.putExtra("petUid",petUid)
-                context.startActivity(intent)
-            }
+            //buttonEdit.setOnClickListener {
+            //    //TODO implement selection and edition in "ActivityManagePet"
+            //    val petUid = pet.getPetUid()
+            //    val intent = Intent(context, ManagePetActivity::class.java)
+            //    intent.putExtra("petUid",petUid)
+            //    context.startActivity(intent)
+            //}
 
         }
 
@@ -49,12 +48,12 @@ class PetsAdapter(private val petList: MutableList<Pet>): RecyclerView.Adapter<P
     }
 
     override fun getItemCount(): Int {
-        return petList.size
+        return carerList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val pet = petList[position]
-        holder.bindPet(pet)
+        val carer = carerList[position]
+        holder.bindCarer(carer)
     }
 
 

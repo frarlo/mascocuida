@@ -1,6 +1,7 @@
 package com.paco.mascocuida.activities
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -87,12 +88,6 @@ class RegisterActivity : AppCompatActivity() {
         // Inicializamos el auth/storage de Firebase:
         auth = Firebase.auth
         storage = Firebase.storage
-        // Declaramos e inicializamos la referencia de storage:
-        val storageRef = storage.reference
-
-        // Inicializamos la base de datos:
-        //database = FirebaseDatabase.getInstance("https://mascocuida-a-default-rtdb.europe-west1.firebasedatabase.app")
-        //databaseRef = Firebase.database.reference
 
         // Asignamos una foto de perfil predeterminada que se muestra en la vista y se carga en el recurso
         userPic.setImageResource(R.drawable.predefined_userpic)
@@ -169,74 +164,26 @@ class RegisterActivity : AppCompatActivity() {
                                         profilePicUrl,userEmail)
 
                                     // Llamamos al método para introducirlo en la colección:
-                                    FirebaseDatabaseModel.registerNewCarer(userId,newCarer) //TODO
-
-
-                                }else{
-                                    val newOwner = User(userId,"Owner",userName, userLastname, userLocation,
-                                        profilePicUrl,userEmail)
-                                    FirebaseDatabaseModel.registerNewOwner(userId,newOwner)
-
-                                }
-
-                            }
-                        }
-
-                    }
-
-
-                        // TODO: Llegados a este punto el usuario: 1.Está registrado 2.Tiene imagen de perfil y 3.Tiene un perfil
-                        // hecho en un documento. Ahora llega la hora de inicializar la pantalla de inicio, que en función del rol,
-                        // será diferente. Lo ideal es VOLVER a la pantalla dde de Login, ya que el usuario no está logueado aún y se
-                        // considera mala praxis loguearlo directamente:
-
-                        //var profilePicUrl: String? = FirebaseStorageModel.createProfilePic(userId, picUri)
-
-
-                        //val profilePicUrl = FirebaseStorageModel.createProfilePic(userId,picUri)
-
-
-
-                        // Register observers to listen for when the download is done or if it fails
-                        /*uploadTask.addOnFailureListener {
-                            // Delete?
-                        }.addOnSuccessListener { taskSnapshot ->
-                            /* Siguiendo la documentación de Firebase añadimos listeners. En caso de éxito, y sabiendo
-                            que "taskSnapshot" contiene los metadatos del archivo subido... */
-
-                            // Creamos otra subtarea para que accedamos a la URI de descarga de la imagen:
-                            taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
-
-                                // Actualizamos el valor de la variable con la uri pasada a cadena:
-                                profilePicUrl = uri.toString()
-
-                                /* Una vez aquí, ya tenemos al usuario registrado y con imagen de perfil, así que
-                                nos agregar un documento con sus datos a la colección que toque */
-
-                                // Si el usuario ha marcado su rol como cuidador...
-                                if(userCarerRole.isChecked){
-
-                                    // Instanciamos un nuevo objeto tipo usuario con los datos recogidos:
-                                    val newCarer = User(userId,"Carer",userName, userLastname, userLocation,
-                                        profilePicUrl,userEmail)
-
-                                    // Llamamos al método para introducirlo en la colección:
                                     FirebaseDatabaseModel.registerNewCarer(userId,newCarer)
 
-                                // Si la ejecución llega aquí es que es el otro rol el que está seleccionado:
                                 }else{
                                     val newOwner = User(userId,"Owner",userName, userLastname, userLocation,
                                         profilePicUrl,userEmail)
                                     FirebaseDatabaseModel.registerNewOwner(userId,newOwner)
                                 }
                             }
-                        }*/
-
+                        }
+                        makeToast("Usuario registrado exitosamente. Ahora puedes loguearte")
+                        // Registro acabado, volvemos al login:
+                        val intent = Intent(this@RegisterActivity,LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
                 }else{
-                    Toast.makeText(this,"El email o contraseña no coinciden",Toast.LENGTH_SHORT).show()
+                    makeToast("El email o contraseña no coinciden")
                 }
             }else{
-                Toast.makeText(this,"Introduce los datos necesarios.",Toast.LENGTH_SHORT).show()
+                makeToast("Introduce los datos necesarios")
             }
         }
     }
@@ -252,32 +199,9 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
-    // Función que crea y registra al usuario en Firebase AUTH:
-    private fun createFirebaseUser(userEmail: String, userPassword: String) {
-
-        auth.createUserWithEmailAndPassword(userEmail, userPassword)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        this,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    updateUI(null)
-                }
-
-            }
-    }
-
-    // Función para actualizar la interfaz con el Usuario - Documentación de Firebase
-    private fun updateUI(user: FirebaseUser?) {
+    // Función que realiza toasts de forma modular:
+    private fun makeToast(message: String){
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
     }
 
 }

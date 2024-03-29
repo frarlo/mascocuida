@@ -6,16 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ManagePetActivity"
-    android:background="@color/mascopurple">
+    android:background="@color/mascopurple"
+    android:fillViewport="true"
+    android:isScrollContainer="false"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_margin="40dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/text_managing_landing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Registra una nueva mascota"
@@ -209,7 +217,8 @@
             android:id="@+id/button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guardar"/>
+            android:text="Guardar"
+            android:backgroundTint="@color/mascoblue"/>
 
         <!-- TODO: Controlar este botón si se carga una mascota -->
         <Button
@@ -217,7 +226,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Eliminar mascota"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:backgroundTint="@color/mascoblue"/>
 
     </LinearLayout>
 

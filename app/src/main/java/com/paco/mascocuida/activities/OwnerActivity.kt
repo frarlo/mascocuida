@@ -29,5 +29,7 @@ class OwnerActivity : AppCompatActivity() {
             val intent = Intent(this,PetsActivity::class.java)
             startActivity(intent)
         }
+
+        // TODO: Implement rest of buttons
     }
 }

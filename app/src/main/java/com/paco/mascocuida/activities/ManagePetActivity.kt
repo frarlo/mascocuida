@@ -1,13 +1,16 @@
 package com.paco.mascocuida.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore.Audio.Radio
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,10 +23,14 @@ import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
 import com.paco.mascocuida.data.Pet
 import com.paco.mascocuida.models.FirebaseDatabaseModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class ManagePetActivity : AppCompatActivity() {
 
+    private lateinit var textLanding: TextView
     private lateinit var petName: EditText
     private lateinit var petSpecies: Spinner
     private lateinit var radioGroupSize: RadioGroup
@@ -50,15 +57,7 @@ class ManagePetActivity : AppCompatActivity() {
         val user = Firebase.auth.currentUser
         val userUid = user?.uid.toString()
 
-
-        // TODO: Discernir si el botón que lanza esta aplicación (con un intent put extra podría valer)
-        // quiere mostrar la vista de adición o de edición. Si es adición los campos en blanco, si es edición
-        // en el intent podría ir el objeto tipo "Pet" y luego modificarlo. La visibilidad del botón "eliminar" solo estará
-        // disponible en la vista de edición, obviamente.
-
-        // TODO: Cuando se guarde, se tiene que persistir el objeto a la BD y, preferiblemente, mostrar un mensaje de guardado con un toast
-        // y volver a la vista de mis mascotas.
-
+        textLanding = findViewById(R.id.text_managing_landing)
         petName = findViewById(R.id.text_pet_name)
         petSpecies = findViewById(R.id.spinner_species)
         radioGroupSize = findViewById(R.id.radio_size)
@@ -68,6 +67,87 @@ class ManagePetActivity : AppCompatActivity() {
         radioGroupGender = findViewById(R.id.radio_sex)
         checkSterilised = findViewById(R.id.check_sterilised)
         buttonSave = findViewById(R.id.button_save)
+        buttonDelete = findViewById(R.id.button_delete)
+
+        // TODO: Discernir si el botón que lanza esta aplicación (con un intent put extra podría valer)
+        // quiere mostrar la vista de adición o de edición. Si es adición los campos en blanco, si es edición
+        // en el intent podría ir el objeto tipo "Pet" y luego modificarlo. La visibilidad del botón "eliminar" solo estará
+        // disponible en la vista de edición, obviamente.
+
+        // Extraemos el UID de la mascota del extra del intent:
+        val existentPetUid = intent.getStringExtra("petUid")
+
+        // Si la cadena está vacía o está nula no hace nada (la vista será de creación) pero si la cadena contiene algo
+        // como el UID de la mascota se inicializará la vista en modo de "edición", con todos los datos de la mascota
+        // preproblados y con un botón adicional.
+        if(existentPetUid.isNullOrEmpty()){
+            textLanding.text = "Registra una nueva mascota" // TODO - Translate
+        }else{
+            textLanding.text = "Edita tu mascota"
+            CoroutineScope(Dispatchers.Main).launch {
+                val editedPet = FirebaseDatabaseModel.listSinglePet(userUid,existentPetUid)
+
+                if (editedPet != null){
+
+                    petName.setText(editedPet.getName())
+
+                    val petObjectSpecies = editedPet.getSpecies()
+                    if(petObjectSpecies.equals("Perro")){
+                        petSpecies.setSelection(0)
+                    }else if (petObjectSpecies.equals("Gato")){
+                        petSpecies.setSelection(1)
+                    }
+
+                    val petObjectSize = editedPet.getSize()
+                    if (petObjectSize.equals("Pequeño")){
+                        radioGroupSize.check(R.id.radio_size_small)
+                    }else if (petObjectSize.equals("Mediano")){
+                        radioGroupSize.check(R.id.radio_size_medium)
+                    }else if (petObjectSize.equals("Grande")){
+                        radioGroupSize.check(R.id.radio_size_large)
+                    }
+
+                    val petObjectAge = editedPet.getAge()
+                    if (petObjectAge.equals("Cachorro")){
+                        radioGroupAge.check(R.id.radio_age_junior)
+                    }else if (petObjectAge.equals("Adulto")){
+                        radioGroupAge.check(R.id.radio_age_adult)
+                    }else if (petObjectAge.equals("Senior")){
+                        radioGroupAge.check(R.id.radio_age_senior)
+                    }
+
+                    // Likes dogs
+                    if(editedPet.getLikesDogs() == true){
+                        checkLikesDogs.isChecked = true
+                    }
+
+                    // Likes cats
+                    if(editedPet.getLikesCats() == true){
+                        checkLikesCats.isChecked = true
+                    }
+
+                    // Gender
+                    val petObjectGender = editedPet.getGender()
+                    if(petObjectGender.equals("Macho")){
+                        radioGroupGender.check(R.id.radio_sex_male)
+                    }else{
+                        radioGroupGender.check(R.id.radio_sex_female)
+                    }
+
+                    // Sterilised
+                    if(editedPet.getIsSterilised() == true){
+                        checkSterilised.isChecked = true
+                    }
+
+                    // Button delete visibility
+                    buttonDelete.visibility = View.VISIBLE
+
+                }
+
+            }
+
+        }
+
 
 
         buttonSave.setOnClickListener {
@@ -114,17 +194,34 @@ class ManagePetActivity : AppCompatActivity() {
             // Comprobamos si la mascota tiene un nombre:
             if(petName.isNotEmpty()){
 
-                // Creamos un nuevo UID para la mascota:
-                val petUid = UUID.randomUUID().toString()
+                if(existentPetUid.isNullOrEmpty()) {
 
-                // Creamos el objeto POJO:
-                val newPet = Pet(userUid,petUid,petName,petSpecies,selectedSize,selectedAge,selectedGender,likesDogs,likesCats,isSterilised)
+                    // Creamos un nuevo UID para la mascota:
+                    val petUid = UUID.randomUUID().toString()
 
-                FirebaseDatabaseModel.addPet(userUid,petUid,newPet)
+                    // Creamos el objeto POJO:
+                    val newPet = Pet(userUid, petUid, petName, petSpecies, selectedSize,
+                        selectedAge, selectedGender, likesDogs, likesCats, isSterilised)
 
-                // TODO: Mensaje de confirmación y paso a otra actividad
-                Toast.makeText(this,"Se ha registrado a $petName correctamente",Toast.LENGTH_SHORT).show()
+                    FirebaseDatabaseModel.addPet(userUid, petUid, newPet)
 
+                    Toast.makeText(this, "Se ha registrado a $petName correctamente", Toast.LENGTH_SHORT).show()
+
+                    launchPetsActivity()
+
+                }else{
+
+                    // Creamos un nuevo objeto POJO con los campos editados:
+                    val editedPet = Pet(userUid, existentPetUid, petName, petSpecies, selectedSize,
+                        selectedAge, selectedGender, likesDogs, likesCats, isSterilised)
+
+                    FirebaseDatabaseModel.addPet(userUid, existentPetUid, editedPet)
+
+                    // TODO: Mensaje de confirmación y paso a otra actividad
+                    Toast.makeText(this, "Se han modificado los datos de $petName correctamente", Toast.LENGTH_SHORT).show()
+
+                    launchPetsActivity()
+                }
 
             }else{
                 Toast.makeText(this,"Faltan datos...",Toast.LENGTH_SHORT).show()
@@ -132,15 +229,29 @@ class ManagePetActivity : AppCompatActivity() {
 
         }
 
+        buttonDelete.setOnClickListener {
+            // TODO: WARNING MESSAGE WITH POP UP?
+            if (existentPetUid != null){
+
+                // TODO: Comprobar si el animal está en algún servicio actual --
+
+                FirebaseDatabaseModel.removePet(userUid,existentPetUid)
+
+
+                // TODO: Volver a la vista de mascotas:
+
+
+                launchPetsActivity()
+            }
+        }
 
     }
 
 
-    private fun compruebaCampos(userName: String, userLastname: String, userLocation: String,
-                                userEmail: String, userEmailConfirmation: String,
-                                userPassword: String, userPasswordConfirmation: String): Boolean{
-
-        return userName.isNotEmpty()
-
+    private fun launchPetsActivity(){
+        val intent = Intent(this, PetsActivity::class.java)
+        startActivity(intent)
+        finish()
     }
+
 }

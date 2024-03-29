@@ -33,13 +33,35 @@ class FirebaseDatabaseModel {
             databaseRef.child("carers").child(userId).setValue(newCarer)
         }
 
+        suspend fun listAllCarers(): MutableList<User>{
+            return suspendCoroutine {continuation ->
+                val carersList = mutableListOf<User>()
+                val carersRef = databaseRef.child("carers")
+
+                carersRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (carerSnapshot in snapshot.children){
+                            val carer = carerSnapshot.getValue<User>()
+                            if (carer != null){
+                                carersList.add(carer)
+                            }
+                        }
+                        continuation.resume(carersList)
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
+            }
+        }
+
         // Función que añade (y edita) una mascota de un dueño:
         fun addPet(userId: String, petUid: String, pet: Pet) {
             databaseRef.child("owners").child(userId).child("pets").child(petUid).setValue(pet)
         }
 
         // Función que quita una mascota al dueño:
-        fun removePet(userId: String, petUid: String, pet:Pet){
+        fun removePet(userId: String, petUid: String){
             databaseRef.child("owners").child(userId).child("pets").child(petUid).removeValue()
         }
 
@@ -61,12 +83,34 @@ class FirebaseDatabaseModel {
                                     petList.add(pet)
                                 }
                             }
-                            
+
                             continuation.resume(petList)
                         }
 
                         override fun onCancelled(error: DatabaseError){
 
+                        }
+                    })
+                }
+            }
+        }
+
+        // Función que lista una mascota específica:
+        suspend fun listSinglePet(userId: String?, petUid: String?): Pet? {
+            return suspendCoroutine { continuation ->
+                if(userId != null && petUid != null){
+
+                    val petRef = databaseRef.child("owners").child(userId).child("pets").child(petUid)
+
+                    petRef.addListenerForSingleValueEvent(object: ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()){
+                                val pet = snapshot.getValue<Pet>()
+                                continuation.resume(pet)
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
                         }
                     })
                 }
