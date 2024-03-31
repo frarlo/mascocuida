@@ -26,6 +26,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import com.paco.mascocuida.R
+import com.paco.mascocuida.data.Carer
 import com.paco.mascocuida.data.User
 import com.paco.mascocuida.models.FirebaseAuthModel
 import com.paco.mascocuida.models.FirebaseDatabaseModel
@@ -33,6 +34,7 @@ import com.paco.mascocuida.models.FirebaseStorageModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -104,6 +106,9 @@ class RegisterActivity : AppCompatActivity() {
                 // más antigua, obsoleta pero válida:
                 // Inicializamos la variable de la imagen de perfil con la URI que selecciona el usuario:
                 picBitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                // Para comprimir y ahorrar datos seguimos: https://stackoverflow.com/a/43885809
+                val baos = ByteArrayOutputStream()
+                picBitmap.compress(Bitmap.CompressFormat.JPEG,25, baos)
                 // La mostramos por la interfaz
                 userPic.setImageBitmap(picBitmap)
                 // Actualizamos el valor de picUri para que apunte a la imagen seleccionada:
@@ -160,11 +165,15 @@ class RegisterActivity : AppCompatActivity() {
 
                                 if(userCarerRole.isChecked){
                                     // Instanciamos un nuevo objeto tipo usuario con los datos recogidos:
-                                    val newCarer = User(userId,"Carer",userName, userLastname, userLocation,
+                                    //val newCarer = User(userId,"Carer",userName, userLastname, userLocation,
+                                        //profilePicUrl,userEmail)
+
+                                    val testCarer = Carer(userId,"Carer",userName, userLastname, userLocation,
                                         profilePicUrl,userEmail)
+                                    FirebaseDatabaseModel.registerCarer(userId,testCarer)
 
                                     // Llamamos al método para introducirlo en la colección:
-                                    FirebaseDatabaseModel.registerNewCarer(userId,newCarer)
+                                    //FirebaseDatabaseModel.registerNewCarer(userId,newCarer)
 
                                 }else{
                                     val newOwner = User(userId,"Owner",userName, userLastname, userLocation,

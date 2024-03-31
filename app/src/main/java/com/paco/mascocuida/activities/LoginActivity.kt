@@ -1,5 +1,6 @@
 package com.paco.mascocuida.activities
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -18,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.paco.mascocuida.R
+import com.paco.mascocuida.data.Carer
+import com.paco.mascocuida.data.Owner
 import com.paco.mascocuida.models.FirebaseAuthModel
 import com.paco.mascocuida.models.FirebaseDatabaseModel
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +68,8 @@ class LoginActivity : AppCompatActivity() {
         // Inicializamos una instancia de SharedPreferences para guardar los datos de logueo:
         val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
 
+        // TODO - Declarar un dialogo de progreso para mostrar la carga del usuario en la aplicación
+
         // Listener del botón de Registro:
         buttonRegister.setOnClickListener{
             val intent = Intent(this, RegisterActivity::class.java)
@@ -100,8 +105,13 @@ class LoginActivity : AppCompatActivity() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 Log.d("LoginActivity","Lanzando corrutina para sacar el objeto con $userUid")
                                 val objectUser = FirebaseDatabaseModel.getUserFromFirebase(userUid)
+                                // TODO changed
                                 if (objectUser != null) {
-                                    userRole = objectUser.getRole()
+                                    if(objectUser is Owner){
+                                        userRole = "Owner"
+                                    }else if(objectUser is Carer){
+                                        userRole = "Carer"
+                                    }
                                 }
 
                                 // Guardamos el rol para manejar de forma más simple el logueo automático:

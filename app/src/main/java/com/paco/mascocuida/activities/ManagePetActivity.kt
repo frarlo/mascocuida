@@ -69,11 +69,6 @@ class ManagePetActivity : AppCompatActivity() {
         buttonSave = findViewById(R.id.button_save)
         buttonDelete = findViewById(R.id.button_delete)
 
-        // TODO: Discernir si el botón que lanza esta aplicación (con un intent put extra podría valer)
-        // quiere mostrar la vista de adición o de edición. Si es adición los campos en blanco, si es edición
-        // en el intent podría ir el objeto tipo "Pet" y luego modificarlo. La visibilidad del botón "eliminar" solo estará
-        // disponible en la vista de edición, obviamente.
-
         // Extraemos el UID de la mascota del extra del intent:
         val existentPetUid = intent.getStringExtra("petUid")
 
@@ -242,6 +237,7 @@ class ManagePetActivity : AppCompatActivity() {
 
 
                 launchPetsActivity()
+
             }
         }
 

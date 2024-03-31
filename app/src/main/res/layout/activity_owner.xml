@@ -18,26 +18,43 @@
         android:textColor="@color/white"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        >
 
         <TextView
+            android:id="@+id/text_welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Hola de nuevo, Usuario"
+            android:gravity="end"
+            android:text="Hola "
             android:layout_weight="1"
             android:textColor="@color/white"
             android:textSize="20sp"/>
 
+        <TextView
+            android:id="@+id/text_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="$user"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+
         <ImageView
+            android:id="@+id/image_welcome"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_margin="15dp"
-            android:src="@drawable/predefined_userpic"/>
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:src="@drawable/predefined_userpic"
+            android:contentDescription="User's profile pic" />
 
     </LinearLayout>
 

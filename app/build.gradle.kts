@@ -62,5 +62,9 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     // The dependency for the Firebase Realtime Database:
     implementation("com.google.firebase:firebase-database-ktx")
+    // Glide implementation - to manage Firebase Storage pics
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
 
 }

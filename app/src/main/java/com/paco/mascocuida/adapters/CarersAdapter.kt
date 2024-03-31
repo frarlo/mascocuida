@@ -9,32 +9,37 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.paco.mascocuida.R
 import com.paco.mascocuida.activities.ManagePetActivity
+import com.paco.mascocuida.activities.ProfileActivity
+import com.paco.mascocuida.data.Carer
 import com.paco.mascocuida.data.Pet
 import com.paco.mascocuida.data.User
 
-class CarersAdapter(private val carerList: MutableList<User>): RecyclerView.Adapter<PetsAdapter.ViewHolder>() {
-
+class CarersAdapter(private val carerList: MutableList<Carer>): RecyclerView.Adapter<CarersAdapter.ViewHolder>() {
+// TODO - Change user - carer etc
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
-        private var petName: TextView = view.findViewById(R.id.recycler_pet_name)
-        private var petSpecies: TextView = view.findViewById(R.id.recycler_pet_species)
-        private val buttonEdit: Button = view.findViewById(R.id.recycler_pet_editbutton)
+        private var carerName: TextView = view.findViewById(R.id.recycler_carer_name)
+        private var carerRating: TextView = view.findViewById(R.id.recycler_carer_rating)
+        private val buttonProfile: Button = view.findViewById(R.id.recycler_carer_profile)
         private val context = view.context
 
-        fun bindCarer(carer: User){
+        fun bindCarer(carer: Carer){
 
-            // Pet - adapter code:
-            //petName.text = pet.getName()
-            //petSpecies.text = pet.getSpecies()
+            carerName.text = carer.getName()
+            var rating = carer.getRating().toString()
+            if(rating == "null"){
+                rating = "0"
+            }
+            carerRating.text = rating
 
 
-            //buttonEdit.setOnClickListener {
-            //    //TODO implement selection and edition in "ActivityManagePet"
-            //    val petUid = pet.getPetUid()
-            //    val intent = Intent(context, ManagePetActivity::class.java)
-            //    intent.putExtra("petUid",petUid)
-            //    context.startActivity(intent)
-            //}
+
+            buttonProfile.setOnClickListener {
+                val carerUid = carer.getUid()
+                val intent = Intent(context, ProfileActivity::class.java)
+                intent.putExtra("carerUid",carerUid)
+                context.startActivity(intent)
+            }
 
         }
 
@@ -42,7 +47,7 @@ class CarersAdapter(private val carerList: MutableList<User>): RecyclerView.Adap
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.pet_layout, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.carer_layout, parent, false)
 
         return ViewHolder(view)
     }

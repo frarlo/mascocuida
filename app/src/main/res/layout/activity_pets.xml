@@ -14,10 +14,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:text="Mis mascotas"
         android:textSize="20sp"
         android:layout_gravity="center"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_pets"
@@ -30,6 +33,9 @@
         android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Añade una mascota"/>
+        android:layout_gravity="center"
+        android:text="Añade una mascota"
+        android:layout_marginTop="30dp"
+        app:backgroundTint="@color/mascoblue"/>
 
 </LinearLayout>

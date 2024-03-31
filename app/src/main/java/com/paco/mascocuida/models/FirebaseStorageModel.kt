@@ -1,6 +1,8 @@
 package com.paco.mascocuida.models
 
+import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
@@ -58,5 +60,8 @@ class FirebaseStorageModel {
         // TODO: Funciones para gestionar la creación, modificación y borrado de archivos de las
         // imágenes que aparecen en el perfil de los cuidadores
 
+        suspend fun getProfilePic(userId: String, url: String){
+
+        }
     }
 }
