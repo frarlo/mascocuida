@@ -75,6 +75,42 @@ class FirebaseDatabaseModel {
             databaseRef.child("owners").child(userId).child("pets").child(petUid).removeValue()
         }
 
+        // Función que añade una imagen de perfil al cuidador:
+        fun addCarerPic(userId: String, picUrl: String){
+
+            databaseRef.child("carers").child(userId).child("pics").push().setValue(picUrl)
+
+        }
+
+        suspend fun listCarerPics(userId: String?): HashMap<String,String>{
+            return suspendCoroutine { continuation ->
+                val carerPics = HashMap<String, String>()
+
+                if (userId != null){
+                    val carerPicsRef = databaseRef.child("carers").child(userId).child("pics")
+
+                    carerPicsRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (picSnapshot in snapshot.children){
+                                val picId = picSnapshot.key
+                                val picUrl = picSnapshot.getValue<String>()
+                                if (picId != null && picUrl != null){
+                                    carerPics[picId] = picUrl
+                                }
+                            }
+
+                            continuation.resume(carerPics)
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+                    })
+                }
+
+            }
+        }
+
         // Función que lista todas las mascotas de un dueño y devuelve un HashMap: // REDO
         // https://stackoverflow.com/questions/70096815/expected-a-list-while-deserializing-but-got-a-class-java-util-hashmap-with-nest
         suspend fun listPets(userId: String?): HashMap<String, Pet> {

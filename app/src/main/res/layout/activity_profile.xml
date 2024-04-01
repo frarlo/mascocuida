@@ -9,16 +9,27 @@
     tools:context=".activities.ProfileActivity"
     android:background="@color/mascopurple">
 
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager_profile"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.35" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/float_addpics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/viewpager_profile"
+        app:layout_constraintEnd_toEndOf="@id/viewpager_profile"
+        android:layout_margin="16dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:contentDescription="Add carer pics"
+        android:visibility="invisible"/>
+
 
     <TextView
         android:id="@+id/textview_username"

@@ -13,8 +13,8 @@ data class Carer(
     private val email: String? = null,
     private val rating: Double? = null,
     private val aboutMe: String? = null,
-    private val pics: List<Pic>? = null,
-    private val reviews: List<Review>? = null
+    private val pics: HashMap<String,String>? = null,
+    private val reviews: HashMap<String,Review>? = null
 ){
 
     fun getUid(): String?{
@@ -51,22 +51,15 @@ data class Carer(
         return aboutMe
     }
 
-    fun getPics(): List<Pic>?{
+    fun getPics(): HashMap<String, String>?{
         return pics
     }
 
-    fun getReviews(): List<Review>?{
+    fun getReviews(): HashMap<String,Review>?{
         return reviews
     }
 }
 
-data class Pic(
-    private val imageLink: String? = null
-){
-    fun getImageLink(): String?{
-        return imageLink
-    }
-}
 
 data class Review(
     private val rating: Int? = null,
