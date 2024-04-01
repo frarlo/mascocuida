@@ -13,6 +13,7 @@ import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.data.Carer
 import com.paco.mascocuida.data.Owner
 import com.paco.mascocuida.data.Pet
+import com.paco.mascocuida.data.Service
 import com.paco.mascocuida.data.User
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -80,6 +81,10 @@ class FirebaseDatabaseModel {
 
             databaseRef.child("carers").child(userId).child("pics").push().setValue(picUrl)
 
+        }
+
+        fun addService(serviceId: String, service: Service){
+            databaseRef.child("service").child(serviceId).setValue(service)
         }
 
         suspend fun listCarerPics(userId: String?): HashMap<String,String>{

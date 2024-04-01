@@ -169,7 +169,7 @@ class RegisterActivity : AppCompatActivity() {
                                         //profilePicUrl,userEmail)
 
                                     val testCarer = Carer(userId,"Carer",userName, userLastname, userLocation,
-                                        profilePicUrl,userEmail)
+                                        profilePicUrl,userEmail,0.0,"Escribe algo sobre ti.")
                                     FirebaseDatabaseModel.registerCarer(userId,testCarer)
 
                                     // Llamamos al método para introducirlo en la colección:

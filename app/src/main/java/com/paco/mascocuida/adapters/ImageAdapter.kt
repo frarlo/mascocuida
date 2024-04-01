@@ -13,6 +13,13 @@ class ImageAdapter(private val imagesList: HashMap<String,String>) : PagerAdapte
 
         val imageView = ImageView(container.context)
 
+        imageView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+
         val imageUrl = imagesList.entries.elementAt(position).value
 
         Glide.with(container.context).load(imageUrl).into(imageView)

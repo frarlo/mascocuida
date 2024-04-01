@@ -7,11 +7,15 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,6 +29,7 @@ import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
 import com.paco.mascocuida.adapters.ImageAdapter
 import com.paco.mascocuida.adapters.PetsAdapter
+import com.paco.mascocuida.fragments.DatePickerFragment
 import com.paco.mascocuida.models.FirebaseDatabaseModel
 import com.paco.mascocuida.models.FirebaseStorageModel
 import kotlinx.coroutines.CoroutineScope
@@ -35,15 +40,22 @@ import java.io.ByteArrayOutputStream
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var profilePics: ViewPager
+    private lateinit var defaultPic: ImageView
     private lateinit var buttonAdd: FloatingActionButton
     private lateinit var profileName: TextView
     private lateinit var profileStars: TextView
-    private lateinit var profileBio: TextView
+    private lateinit var profileBio: EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var buttonAction: Button
     private lateinit var user: FirebaseUser
     private lateinit var userUid: String
     private lateinit var picUri: Uri
+
+    private lateinit var selectedPet: Spinner
+    private lateinit var selectedDate: EditText
+    private lateinit var selectedTime: EditText
+    private lateinit var aboutRequest: EditText
+    private lateinit var buttonRequest: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,84 +80,76 @@ class ProfileActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recycler_reviews)
         buttonAction = findViewById(R.id.button_action)
 
-
-        // TODO - Discriminar si la actividad viene desde un dueño que quiere dejar a la mascota o es el prio
-        // cuidador que quiere ver/editar su perfil.
-
-        // ACCEDER AL INTENT PUT EXTRA (SI esta actividad la inicia el propio usuario cuidador no habrá intent extra pero
-        // si el perfil lo está viendo el owner habrá intent extra con el UID del cuidador seleccionado. Compararemos el UID pasado
-        // con el UID del usuario actual. Si existe la variable será para ver el perfil de forma "READ" y si no existe es el
-        // propio cuidador el que está accediendo a su perfil, por lo que podrá editar.
-
         // Extraemos el UID del cuidador del extra del intent:
         val existentCarerUid = intent.getStringExtra("carerUid")
 
         // Si no existe es que es el propio usuario el que está accediendo a su perfil:
         if(existentCarerUid.isNullOrEmpty()){
-            // Se podrá ver el botón de añadir fotos al perfil:
-            buttonAdd.visibility = View.VISIBLE
-            // TODO - Declarar todo lo editable como tal:
+            // Tomamos el userUid del Auth como referencia para mostrar el perfil (el propio usuario):
+            extractUserInfo(userUid)
             // Función que se encarga de la edición:
             profileIsEditable()
+
         // Si existe es que es un dueño "cotilleando"
         }else{
             // TODO - Declarar, si hace falta, algún campo como "read only"
-
+            extractUserInfo(existentCarerUid)
             profileIsReadOnly()
         }
     }
 
     private fun profileIsReadOnly(){
-
+        // La biografía no se puede cambiar:
+        profileBio.isEnabled = false
+        // El botón hace otra función
         buttonAction.text = "Solicitar cuidado"
-    }
 
-    private fun profileIsEditable(){
+        // Inflar la vista de solicitud:
+        val builder = AlertDialog.Builder(this).setCancelable(true)
+        val view = layoutInflater.inflate(R.layout.request_service, null)
+        buttonRequest = view.findViewById(R.id.button_request)
+        selectedPet = view.findViewById(R.id.spinner_request)
+        selectedDate = view.findViewById(R.id.edit_date)
+        selectedTime = view.findViewById(R.id.edit_time)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            val editableUser = FirebaseDatabaseModel.getCarerFromFirebase(userUid)
+        builder.setView(view)
 
-            if(editableUser != null){
-
-                if(!editableUser.getPics().isNullOrEmpty()){
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val imagesMap = FirebaseDatabaseModel.listCarerPics(userUid)
-                        val imagesAdapter = ImageAdapter(imagesMap)
-                        profilePics.adapter = imagesAdapter
-                        Toast.makeText(
-                            this@ProfileActivity,
-                            "Se han encontrado imagenes",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        for((key,value) in imagesMap){
-                            Log.d("ImagesMapContent","Key: $key / Url: $value")
-                        }
-                    }
+        val popUp = builder.create()
 
 
 
-                }
 
-                val userFullName = editableUser.getName() + " " + editableUser.getLastname()
-                profileName.text = userFullName
+        buttonAction.setOnClickListener {
+            // TODO - Pantalla de solicitud de cuidado - Activity - Nos tenemos que llevar el UID que llevamos con el intent:
+            popUp.show()
 
-                val userRating = editableUser.getRating()
-                val formattedRating = String.format("%.2f", userRating)
-                if(userRating == null){
-                    profileStars.text = "0/5"
-                }else{
-                    profileStars.text = formattedRating + "/5"
-                }
-
-
-                buttonAction.text = "Guardar cambios"
+            selectedDate.setOnClickListener{
+                showDatePickerDialog()
             }
 
 
         }
+    }
 
 
+    private fun showDatePickerDialog(){
+        val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
+        datePicker.show(supportFragmentManager, "datePicker")
+    }
+
+    private fun onDateSelected(day: Int, month: Int, year: Int){
+        selectedDate.setText("$day/$month/$year")
+    }
+
+
+
+    private fun profileIsEditable(){
+
+        // El botón hace otra función
+        buttonAction.text = "Guardar cambios"
+
+        // Se podrá ver el botón de añadir fotos al perfil:
+        buttonAdd.visibility = View.VISIBLE
 
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
@@ -169,6 +173,8 @@ class ProfileActivity : AppCompatActivity() {
                     if(picUrl != null) {
                         FirebaseDatabaseModel.addCarerPic(userUid, picUrl)
                     }
+
+                    makeToast("Imagen guardada en tu perfil")
                 }
             } else {
                 Log.d("PhotoPicker", "No media selected")
@@ -185,4 +191,64 @@ class ProfileActivity : AppCompatActivity() {
             //TODO: Save changes
         }
     }
+
+    private fun makeToast(message: String){
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
+    }
+
+    // Función que extrae un objeto que representa al usuario con el UID que le hemos pasado como parámetro:
+    private fun extractUserInfo(userUid: String){
+        // Lanzamos una corrutina (Asincronía de Firebase):
+        CoroutineScope(Dispatchers.Main).launch {
+
+            // Extraemos el objeto de usuario:
+            val profileUser = FirebaseDatabaseModel.getCarerFromFirebase(userUid)
+
+            if(profileUser != null){
+
+                // Accedemos al campo "pics". Si no es nulo o vacío llenaremos nuestro Pager con sus imágenes de perfil con el adaptador:
+                if(!profileUser.getPics().isNullOrEmpty()){
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val imagesMap = FirebaseDatabaseModel.listCarerPics(userUid)
+                        val imagesAdapter = ImageAdapter(imagesMap)
+                        profilePics.adapter = imagesAdapter
+
+                        for((key,value) in imagesMap){                                                      // DEBUG TODO - Delete
+                            Log.d("ImagesMapContent","Key: $key / Url: $value")                   //
+                        }                                                                                  // TODO - Delete
+                    }
+                }else{
+
+                    defaultPic = findViewById(R.id.imageview_default)
+                    defaultPic.visibility = View.VISIBLE
+
+                }
+
+                // Accedemos al nombre, apellidos, rating, biografía y las reviews, si tuviese:
+                val userFullName = profileUser.getName() + " " + profileUser.getLastname()
+                profileName.text = userFullName
+
+                val userRating = profileUser.getRating()
+                val formattedRating = String.format("%.2f", userRating)
+                if(userRating == null){
+                    profileStars.text = "0/5"
+                }else{
+                    profileStars.text = formattedRating + "/5"
+                }
+                val aboutMe = profileUser.getAboutMe()
+                profileBio.setText(aboutMe)
+
+                // TODO : Async call for reviews
+                if(!profileUser.getReviews().isNullOrEmpty()){
+
+                    /*CoroutineScope(Dispatchers.Main).launch {
+
+                    }*/
+                }
+
+            }
+        }
+    }
+
 }
