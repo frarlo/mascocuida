@@ -70,6 +70,12 @@ class CarerActivity : AppCompatActivity() {
 
         }
 
+        buttonServices.setOnClickListener {
+            val intent = Intent(this,ServicesActivity::class.java)
+            intent.putExtra("userRole","Carer")
+            startActivity(intent)
+        }
+
 
         buttonProfile.setOnClickListener{
 

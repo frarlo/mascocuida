@@ -21,7 +21,7 @@ import kotlin.coroutines.suspendCoroutine
 class FirebaseDatabaseModel {
     companion object {
 
-        // Base de datos y referencia:
+        // Base de datos (instancia) y referencia (abstracción de Firebase):
         private val database = FirebaseDatabase.getInstance("https://mascocuida-a-default-rtdb.europe-west1.firebasedatabase.app")
         private var databaseRef = database.reference
 
@@ -31,19 +31,22 @@ class FirebaseDatabaseModel {
 
         }
 
+        // Función que registra a un dueño (o lo edita):
         fun registerOwner(userId: String, owner: Owner){
             databaseRef.child("owners").child(userId).setValue(owner)
         }
 
         // Función que registra un nuevo cuidador:
-        fun registerNewCarer(userId: String, newCarer: User) {
+        /*fun registerNewCarer(userId: String, newCarer: User) {
             databaseRef.child("carers").child(userId).setValue(newCarer)
-        }
+        }*/
 
+        // Función que registra a un cuidador (o lo edita):
         fun registerCarer(userId:String, carer: Carer){
             databaseRef.child("carers").child(userId).setValue(carer)
         }
 
+        // Función que lista todos los cuidadores que existen en nuestra aplicación:
         suspend fun listAllCarers(): MutableList<Carer>{
             return suspendCoroutine {continuation ->
                 val carersList = mutableListOf<Carer>()
@@ -84,7 +87,61 @@ class FirebaseDatabaseModel {
         }
 
         fun addService(serviceId: String, service: Service){
-            databaseRef.child("service").child(serviceId).setValue(service)
+            databaseRef.child("services").child(serviceId).setValue(service)
+        }
+
+        suspend fun listCarerServices(carerId: String?): HashMap<String, Service>{
+            return suspendCoroutine { continuation ->
+                val carerServices = HashMap<String, Service>()
+                if(carerId!= null){
+                    val carerServicesRef = databaseRef.child("services").orderByChild("carerUid").equalTo(carerId)
+
+                    carerServicesRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (serviceSnapshot in snapshot.children){
+                                val serviceId = serviceSnapshot.key
+                                val serviceObj = serviceSnapshot.getValue<Service>()
+                                if(serviceId != null && serviceObj != null){
+                                    carerServices[serviceId] = serviceObj
+                                }
+                            }
+
+                            continuation.resume(carerServices)
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("FirebaseDatabaseModel.kt","Error: $error")
+                        }
+                    })
+                }
+            }
+        }
+
+        suspend fun listOwnerServices(carerId: String?): HashMap<String, Service>{
+            return suspendCoroutine { continuation ->
+                val ownerServices = HashMap<String, Service>()
+                if(carerId!= null){
+                    val carerServicesRef = databaseRef.child("services").orderByChild("ownerUid").equalTo(carerId)
+
+                    carerServicesRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (serviceSnapshot in snapshot.children){
+                                val serviceId = serviceSnapshot.key
+                                val serviceObj = serviceSnapshot.getValue<Service>()
+                                if(serviceId != null && serviceObj != null){
+                                    ownerServices[serviceId] = serviceObj
+                                }
+                            }
+
+                            continuation.resume(ownerServices)
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("FirebaseDatabaseModel.kt","Error: $error")
+                        }
+                    })
+                }
+            }
         }
 
         suspend fun listCarerPics(userId: String?): HashMap<String,String>{

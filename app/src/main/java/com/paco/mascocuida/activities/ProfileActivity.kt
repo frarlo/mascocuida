@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -29,13 +31,20 @@ import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
 import com.paco.mascocuida.adapters.ImageAdapter
 import com.paco.mascocuida.adapters.PetsAdapter
+import com.paco.mascocuida.data.Pet
+import com.paco.mascocuida.data.Service
 import com.paco.mascocuida.fragments.DatePickerFragment
+import com.paco.mascocuida.fragments.TimePickerFragment
 import com.paco.mascocuida.models.FirebaseDatabaseModel
 import com.paco.mascocuida.models.FirebaseStorageModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import java.util.UUID
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -51,7 +60,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userUid: String
     private lateinit var picUri: Uri
 
-    private lateinit var selectedPet: Spinner
+    private lateinit var spinnerPets: Spinner
+    private lateinit var spinnerAdapter: ArrayAdapter<Pet>
     private lateinit var selectedDate: EditText
     private lateinit var selectedTime: EditText
     private lateinit var aboutRequest: EditText
@@ -92,25 +102,40 @@ class ProfileActivity : AppCompatActivity() {
 
         // Si existe es que es un dueño "cotilleando"
         }else{
+
             // TODO - Declarar, si hace falta, algún campo como "read only"
             extractUserInfo(existentCarerUid)
-            profileIsReadOnly()
+            profileIsReadOnly(existentCarerUid)
         }
     }
 
-    private fun profileIsReadOnly(){
+    private fun profileIsReadOnly(existentCarerUid: String){
         // La biografía no se puede cambiar:
         profileBio.isEnabled = false
         // El botón hace otra función
         buttonAction.text = "Solicitar cuidado"
 
+
+
         // Inflar la vista de solicitud:
         val builder = AlertDialog.Builder(this).setCancelable(true)
         val view = layoutInflater.inflate(R.layout.request_service, null)
         buttonRequest = view.findViewById(R.id.button_request)
-        selectedPet = view.findViewById(R.id.spinner_request)
+        spinnerPets = view.findViewById(R.id.spinner_request)
         selectedDate = view.findViewById(R.id.edit_date)
         selectedTime = view.findViewById(R.id.edit_time)
+        aboutRequest = view.findViewById(R.id.request_text)
+
+        // Accedemos al listado de mascotas del dueño:
+        CoroutineScope(Dispatchers.Main).launch {
+            // Sacamos el HashMap:
+            val petsMap = FirebaseDatabaseModel.listPets(userUid)
+            // Lo convertimos a una lista:
+            val petsList = petsMap.values.toList()
+            spinnerAdapter = ArrayAdapter(this@ProfileActivity,android.R.layout.simple_list_item_1,petsList)
+            spinnerPets.adapter = spinnerAdapter
+        }
+
 
         builder.setView(view)
 
@@ -123,14 +148,68 @@ class ProfileActivity : AppCompatActivity() {
             // TODO - Pantalla de solicitud de cuidado - Activity - Nos tenemos que llevar el UID que llevamos con el intent:
             popUp.show()
 
+            var selectedPet: Pet? = null
+
+            spinnerPets.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    selectedPet = spinnerPets.selectedItem as Pet
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
+
+            }
+
             selectedDate.setOnClickListener{
                 showDatePickerDialog()
+            }
+
+            selectedTime.setOnClickListener {
+                showTimePickerDialog()
+            }
+
+
+
+            // TODO - Button listener
+            buttonRequest.setOnClickListener {
+
+                if (checkFields(selectedPet,selectedDate.text.toString(),selectedTime.text.toString())){
+
+                    //val date = SimpleDateFormat("dd-MM-yyyy").parse(selectedDate.toString())
+                    val date = selectedDate.text.toString()
+                    //val serviceDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(date)
+                    val time = selectedTime.text.toString()
+                    //val serviceTime = SimpleDateFormat("HH:mm",Locale.getDefault()).format(time)
+                    val requestInformation = aboutRequest.text.toString()
+
+
+                    // TODO - Crear solicitud con los datos de la mascota, la fecha, la hora, los comentarios y un estatus predeterminado
+                    val newService = Service(userUid,existentCarerUid,selectedPet,date,time,requestInformation,"pending")
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        // Creamos un nuevo UID para el servicio:
+                        val serviceUid = UUID.randomUUID().toString()
+
+                        FirebaseDatabaseModel.addService(serviceUid,newService)
+                    }
+                }
+
             }
 
 
         }
     }
 
+    private fun checkFields(pet: Pet?, date: String, time: String): Boolean{
+        return pet != null && date.isNotEmpty() && time.isNotEmpty()
+    }
 
     private fun showDatePickerDialog(){
         val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
@@ -141,7 +220,14 @@ class ProfileActivity : AppCompatActivity() {
         selectedDate.setText("$day/$month/$year")
     }
 
+    private fun showTimePickerDialog(){
+        val timePicker = TimePickerFragment { onTimeSelected(it)}
+        timePicker.show(supportFragmentManager, "timePicker")
+    }
 
+    private fun onTimeSelected(time: String){
+        selectedTime.setText(time)
+    }
 
     private fun profileIsEditable(){
 

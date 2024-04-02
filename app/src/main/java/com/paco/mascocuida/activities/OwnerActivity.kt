@@ -83,6 +83,9 @@ class OwnerActivity : AppCompatActivity() {
         // Listener. El usuario quiere acceder a sus cuidados.
         buttonServices.setOnClickListener {
             // TODO - Launch intent to Manage Services -- TODO
+            val intent = Intent(this, ServicesActivity::class.java)
+            intent.putExtra("userRole","Owner")
+            startActivity(intent)
         }
 
         // Listener. El usuario quiere ver un listado de los cuidadores.

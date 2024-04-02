@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Mascocuida"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ServicesActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ListCarersActivity"
             android:exported="false" />
         <activity

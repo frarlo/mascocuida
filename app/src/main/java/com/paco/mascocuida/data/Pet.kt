@@ -16,6 +16,11 @@ data class Pet(
     private val isSterilised: Boolean? = false
 ) {
 
+    // Función añadida para mostrar cada objeto instanciado de mascota simplemente por su nombre:
+    override fun toString(): String {
+        return name!!
+    }
+
     fun getOwnerUid(): String? {
         return ownerUid
     }

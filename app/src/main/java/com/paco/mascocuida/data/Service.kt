@@ -7,8 +7,9 @@ import java.util.Date
 data class Service(
     val ownerUid: String? = null,
     val carerUid: String? = null,
-    val petUid: String? = null,
-    val date: Date? = null,
-    val time: Date? = null,
+    val pet: Pet? = null,
+    val date: String? = null,
+    val time: String? = null,
+    val information: String? = null,
     var status: String? = null
 )
