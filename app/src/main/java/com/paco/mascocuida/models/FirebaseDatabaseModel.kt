@@ -144,6 +144,10 @@ class FirebaseDatabaseModel {
             }
         }
 
+        fun updateServiceStatus(serviceId: String, status: String){
+            databaseRef.child("services").child(serviceId).child("status").setValue(status)
+        }
+
         suspend fun listCarerPics(userId: String?): HashMap<String,String>{
             return suspendCoroutine { continuation ->
                 val carerPics = HashMap<String, String>()
