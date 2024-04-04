@@ -3,6 +3,7 @@ package com.paco.mascocuida.models
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
@@ -16,13 +17,12 @@ class FirebaseStorageModel {
         private var storage: FirebaseStorage = Firebase.storage
         private var storageRef = storage.reference
 
-        // Función que crea (o actualiza) la imagen de perfil del usuario:
+        // Función que guarda (o actualiza) la imagen de perfil del usuario:
         suspend fun createProfilePic(userId: String, file: Uri): String? =
             suspendCoroutine { continuation ->
 
                 var profilePicUrl: String? = null
 
-                //val profilePicsRef = storageRef.child("profile_pics/profile$userId")
                 val profilePicsRef = storageRef.child("user_pics/$userId/profile_pic/profile$userId")
 
                 val uploadTask = profilePicsRef.putFile(file)
@@ -45,15 +45,7 @@ class FirebaseStorageModel {
                 }
             }
 
-        // Borra la imagen de perfil si el usuario quiere borrar su cuenta:
-        fun deleteProfilePic(userId: String) {
-
-            // TODO: Borrar archivo del bucket.
-        }
-
-        // TODO: Funciones para gestionar la creación, modificación y borrado de archivos de las
-        // imágenes que aparecen en el perfil de los cuidadores
-
+        // Función que guarda una imagen que tenga el Cuidador en su perfil personal público:
         suspend fun uploadCarerPic(userId: String, file: Uri): String? =
             suspendCoroutine { continuation ->
 
@@ -83,5 +75,12 @@ class FirebaseStorageModel {
 
                 }
             }
+
+        // Función que borra una imagen que tenga el Cuidador en su perfil personal público:
+        fun removeCarerPic(picUrl: String){
+            val fileRef = storage.getReferenceFromUrl(picUrl)
+            fileRef.delete()
+        }
+
     }
 }

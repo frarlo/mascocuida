@@ -80,6 +80,12 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linear_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,10 +101,12 @@
         android:background="@color/white"
         android:layout_margin="8dp"/>
 
+    </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fecha y hora requeridas:"
+        android:text="Fecha y hora:"
         android:textColor="@color/white"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
@@ -111,7 +119,6 @@
         android:textColor="@color/white"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
-
 
    <LinearLayout
        android:layout_width="match_parent"

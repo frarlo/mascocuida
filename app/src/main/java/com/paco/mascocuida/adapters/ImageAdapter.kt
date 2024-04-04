@@ -40,4 +40,6 @@ class ImageAdapter(private val imagesList: HashMap<String,String>) : PagerAdapte
     override fun destroyItem(container: ViewGroup, position: Int, image: Any) {
         container.removeView(image as View)
     }
+
+
 }

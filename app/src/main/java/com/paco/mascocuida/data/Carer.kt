@@ -96,7 +96,6 @@ data class Carer(
 
 }
 
-
 data class Review(
     private val rating: Int? = null,
     private val opinion: String? = null

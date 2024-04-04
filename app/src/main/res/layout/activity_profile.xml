@@ -39,7 +39,25 @@
         android:layout_margin="16dp"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
+        android:src="@drawable/image_add"
         android:contentDescription="Add carer pics"
+        app:elevation="0dp"
+        android:backgroundTint="@android:color/transparent"
+        android:visibility="invisible"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/float_removepic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/viewpager_profile"
+        app:layout_constraintStart_toStartOf="@+id/viewpager_profile"
+        android:layout_margin="16dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:src="@drawable/delete_bin"
+        android:contentDescription="Add carer pics"
+        app:elevation="0dp"
+        android:backgroundTint="@android:color/transparent"
         android:visibility="invisible"/>
 
 

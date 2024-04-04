@@ -27,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import com.paco.mascocuida.R
 import com.paco.mascocuida.data.Carer
+import com.paco.mascocuida.data.Owner
 import com.paco.mascocuida.data.User
 import com.paco.mascocuida.models.FirebaseAuthModel
 import com.paco.mascocuida.models.FirebaseDatabaseModel
@@ -57,8 +58,6 @@ class RegisterActivity : AppCompatActivity() {
 
     // Declaramos la variable que controla la autentificación en Firebase:
     private lateinit var auth: FirebaseAuth
-    // Lo mismo para Firebase storage:
-    private lateinit var storage: FirebaseStorage
     // Base de datos:
     //private lateinit var database: FirebaseDatabase
     //private lateinit var databaseRef: DatabaseReference
@@ -89,7 +88,6 @@ class RegisterActivity : AppCompatActivity() {
 
         // Inicializamos el auth/storage de Firebase:
         auth = Firebase.auth
-        storage = Firebase.storage
 
         // Asignamos una foto de perfil predeterminada que se muestra en la vista y se carga en el recurso
         userPic.setImageResource(R.drawable.predefined_userpic)
@@ -164,21 +162,20 @@ class RegisterActivity : AppCompatActivity() {
                                 profilePicUrl = FirebaseStorageModel.createProfilePic(userId,picUri)
 
                                 if(userCarerRole.isChecked){
-                                    // Instanciamos un nuevo objeto tipo usuario con los datos recogidos:
-                                    //val newCarer = User(userId,"Carer",userName, userLastname, userLocation,
-                                        //profilePicUrl,userEmail)
 
-                                    val testCarer = Carer(userId,"Carer",userName, userLastname, userLocation,
+                                    // Instanciamos un nuevo objeto tipo cuidador con los datos recogidos:
+                                    val carer = Carer(userId,"Carer",userName, userLastname, userLocation,
                                         profilePicUrl,userEmail,0.0,"Escribe algo sobre ti.")
-                                    FirebaseDatabaseModel.registerCarer(userId,testCarer)
+
+                                    FirebaseDatabaseModel.registerCarer(userId,carer)
 
                                     // Llamamos al método para introducirlo en la colección:
                                     //FirebaseDatabaseModel.registerNewCarer(userId,newCarer)
 
                                 }else{
-                                    val newOwner = User(userId,"Owner",userName, userLastname, userLocation,
+                                    val owner = Owner(userId,"Owner",userName, userLastname, userLocation,
                                         profilePicUrl,userEmail)
-                                    FirebaseDatabaseModel.registerNewOwner(userId,newOwner)
+                                    FirebaseDatabaseModel.registerOwner(userId,owner)
                                 }
                             }
                         }

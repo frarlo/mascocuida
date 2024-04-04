@@ -55,9 +55,32 @@ class ServicesActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.Main).launch {
 
                 val servicesMap = FirebaseDatabaseModel.listCarerServices(userUid)
-                val servicesAdapter = ServicesAdapter(servicesMap,"Carer","pending")
+                /*val servicesAdapter = ServicesAdapter(servicesMap,"Carer","pending")
                 val recyclerView: RecyclerView = findViewById(R.id.recycler_pending)
-                recyclerView.adapter = servicesAdapter
+                recyclerView.adapter = servicesAdapter*/
+
+                val pendingServicesMap = servicesMap.filterValues { it.status == "pending" }
+                val recyclerViewPending: RecyclerView = findViewById(R.id.recycler_pending)
+                val acceptedServicesMap = servicesMap.filterValues { it.status == "accepted" }
+                val recyclerViewAccepted: RecyclerView = findViewById(R.id.recycler_accepted)
+                val completedServicesMap = servicesMap.filterValues {it.status == "completed"}
+                val recyclerViewCompleted: RecyclerView = findViewById(R.id.recycler_completed)
+
+
+                if(pendingServicesMap.isNotEmpty()){
+                    val pendingServicesAdapter = ServicesAdapter(pendingServicesMap,"Carer","pending")
+                    recyclerViewPending.adapter = pendingServicesAdapter
+                }
+
+                if(acceptedServicesMap.isNotEmpty()){
+                    val acceptedServicesAdapter = ServicesAdapter(acceptedServicesMap,"Carer","accepted")
+                    recyclerViewAccepted.adapter = acceptedServicesAdapter
+                }
+
+                if(completedServicesMap.isNotEmpty()){
+                    val completedServicesAdapter = ServicesAdapter(completedServicesMap,"Carer","completed")
+                    recyclerViewCompleted.adapter = completedServicesAdapter
+                }
 
             }
 
@@ -72,25 +95,31 @@ class ServicesActivity : AppCompatActivity() {
 
                 // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-values.html
                 val pendingServicesMap = servicesMap.filterValues { it.status == "pending" }
+                val recyclerViewPending: RecyclerView = findViewById(R.id.recycler_pending)
                 val acceptedServicesMap = servicesMap.filterValues { it.status == "accepted" }
+                val recyclerViewAccepted: RecyclerView = findViewById(R.id.recycler_accepted)
                 val completedServicesMap = servicesMap.filterValues {it.status == "completed"}
+                val recyclerViewCompleted: RecyclerView = findViewById(R.id.recycler_completed)
 
                 if(pendingServicesMap.isNotEmpty()){
-                    val pendingServicesAdapter = ServicesAdapter(servicesMap,"Owner","pending")
-                    val recyclerViewPending: RecyclerView = findViewById(R.id.recycler_pending)
+                    val pendingServicesAdapter = ServicesAdapter(pendingServicesMap,"Owner","pending")
                     recyclerViewPending.adapter = pendingServicesAdapter
+                }else{
+                    recyclerViewPending.adapter = null
                 }
 
                 if(acceptedServicesMap.isNotEmpty()){
-                    val acceptedServicesAdapter = ServicesAdapter(servicesMap,"Owner","accepted")
-                    val recyclerViewAccepted: RecyclerView = findViewById(R.id.recycler_accepted)
+                    val acceptedServicesAdapter = ServicesAdapter(acceptedServicesMap,"Owner","accepted")
                     recyclerViewAccepted.adapter = acceptedServicesAdapter
+                }else{
+                    recyclerViewAccepted.adapter = null
                 }
 
                 if(completedServicesMap.isNotEmpty()){
-                    val completedServicesAdapter = ServicesAdapter(servicesMap,"Owner","completed")
-                    val recyclerViewCompleted: RecyclerView = findViewById(R.id.recycler_completed)
+                    val completedServicesAdapter = ServicesAdapter(completedServicesMap,"Owner","completed")
                     recyclerViewCompleted.adapter = completedServicesAdapter
+                }else{
+                    recyclerViewCompleted.adapter = null
                 }
             }
         }
