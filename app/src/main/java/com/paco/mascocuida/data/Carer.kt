@@ -97,13 +97,16 @@ data class Carer(
 }
 
 data class Review(
+    private val author: String? = null,
     private val rating: Int? = null,
     private val opinion: String? = null
 ){
+    fun getAuthor(): String?{
+        return author
+    }
     fun getRating(): Int?{
         return rating
     }
-
     fun getOpinion(): String?{
         return opinion
     }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    >
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="10dp"
+        app:strokeColor="@color/mascoemphasis"
+        app:cardBackgroundColor="@color/mascopurple">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="Introduce tu valoración"
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+
+            <!-- Estrellas de 1 a 5 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/first_star"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/rating_star"
+                    android:cropToPadding="true"
+                    />
+
+                <ImageView
+                    android:id="@+id/second_star"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/empty_star"
+                    android:cropToPadding="true"
+                    />
+
+                <ImageView
+                    android:id="@+id/third_star"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/empty_star"
+                    android:cropToPadding="true"
+                    />
+
+                <ImageView
+                    android:id="@+id/fourth_star"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/empty_star"
+                    android:cropToPadding="true"
+                    />
+
+                <ImageView
+                    android:id="@+id/fifth_star"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/empty_star"
+                    android:cropToPadding="true"
+                    />
+
+            </LinearLayout>
+
+            <!-- Opinion texto -->
+
+            <EditText
+                android:id="@+id/review_text"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:inputType="text"
+                android:hint="Escribe algo que te gustó"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:textAlignment="textStart"
+                />
+
+            <Button
+                android:id="@+id/button_send"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="15dp"
+                android:gravity="center"
+                android:text="Envía tu opinión"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/mascoblue"
+                />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        app:strokeColor="@color/mascopurple"
+        app:strokeWidth="2sp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Puntuación"
+                    android:textColor="@color/black"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end">
+
+                    <ImageView
+                        android:id="@+id/first_star"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/rating_star"
+                        android:cropToPadding="true"
+                        />
+
+                    <ImageView
+                        android:id="@+id/second_star"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/empty_star"
+                        android:cropToPadding="true"
+                        />
+
+                    <ImageView
+                        android:id="@+id/third_star"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/empty_star"
+                        android:cropToPadding="true"
+                        />
+
+                    <ImageView
+                        android:id="@+id/fourth_star"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/empty_star"
+                        android:cropToPadding="true"
+                        />
+
+                    <ImageView
+                        android:id="@+id/fifth_star"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/empty_star"
+                        android:cropToPadding="true"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/recycler_review_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text=""
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/recycler_review_opinion"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:background="@color/lightpurple"
+                android:text=""
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

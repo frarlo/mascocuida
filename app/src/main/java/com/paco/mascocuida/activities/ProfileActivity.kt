@@ -33,6 +33,7 @@ import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
 import com.paco.mascocuida.adapters.ImageAdapter
 import com.paco.mascocuida.adapters.PetsAdapter
+import com.paco.mascocuida.adapters.ReviewsAdapter
 import com.paco.mascocuida.data.Pet
 import com.paco.mascocuida.data.Service
 import com.paco.mascocuida.fragments.DatePickerFragment
@@ -366,9 +367,11 @@ class ProfileActivity : AppCompatActivity() {
                 // TODO : Async call for reviews
                 if(!profileUser.getReviews().isNullOrEmpty()){
 
-                    /*CoroutineScope(Dispatchers.Main).launch {
-
-                    }*/
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val reviewsMap = FirebaseDatabaseModel.listCarerReviews(userUid)
+                        val reviewsAdapter = ReviewsAdapter(reviewsMap)
+                        recyclerView.adapter = reviewsAdapter
+                    }
                 }
 
             }
