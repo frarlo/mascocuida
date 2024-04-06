@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="2dp"
-    android:layout_margin="5dp"
-    android:background="@color/mascoemphasis"
-    android:layout_gravity="start">
+    android:orientation="vertical"
+    android:padding="5dp">
 
-    <TextView
-        android:id="@+id/recycler_pet_name"
-        android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nombre mascota"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:layout_gravity="start"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/recycler_pet_species"
-        />
+        android:backgroundTint="@color/white"
+        app:strokeColor="@color/mascoblue"
+        app:strokeWidth="2sp">
 
-    <TextView
-        android:id="@+id/recycler_pet_species"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Especie mascota"
-        android:layout_column="1"
-        android:textColor="@color/white"
-        android:layout_marginStart="10dp"
-        android:layout_gravity="start"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.3"
-        app:layout_constraintStart_toEndOf="@id/recycler_pet_name"
-        app:layout_constraintEnd_toStartOf="@id/recycler_pet_editbutton"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-    <Button
-        android:id="@+id/recycler_pet_editbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="2"
-        android:text="Editar"
-        android:layout_gravity="end"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.3"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="@color/mascoblue"/>
+            <TextView
+                android:id="@+id/recycler_pet_name"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginStart="40dp"
+                android:textColor="@color/black"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                />
 
+            <TextView
+                android:id="@+id/recycler_pet_species"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/recycler_pet_editbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Editar"
+                android:textColor="@color/white"
+                android:layout_gravity="end"
+                android:backgroundTint="@color/mascoblue"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

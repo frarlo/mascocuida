@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -68,13 +70,13 @@ class LoginActivity : AppCompatActivity() {
         // Inicializamos una instancia de SharedPreferences para guardar los datos de logueo:
         val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
 
-        // TODO - Declarar un dialogo de progreso para mostrar la carga del usuario en la aplicación
+        userEmail
 
         // Listener del botón de Registro:
         buttonRegister.setOnClickListener{
             val intent = Intent(this, RegisterActivity::class.java)
-            // Start
             startActivity(intent)
+            // No hacemos finish por si el usuario le da sin querer (darle a "atrás" volvería aquí)
         }
 
         // Listener del botón de Olvido:
@@ -84,14 +86,13 @@ class LoginActivity : AppCompatActivity() {
 
         // Listener del botón de Login:
         buttonLogin.setOnClickListener {
-            // TODO:
-            //  1. Debe comprobar los datos en Firebase
-            //  2. Debe mostrar, en caso de introducir MAL los datos que ha fallado la autentificación
+
             val userEmail = userEmail.text.toString()
             val userPassword = userPassword.text.toString()
 
             // Comprobamos si el usuario ha introducido algo en los dos campos:
-           if (checkFields(userEmail, userPassword)) {
+            if (checkFields(userEmail, userPassword)) {
+                buttonLogin.isEnabled = false
                 Log.d("LoginActivity","Usuario ha puesto email y contraseña")
                 auth.signInWithEmailAndPassword(userEmail, userPassword)
                     .addOnCompleteListener(this) { task ->
@@ -121,26 +122,19 @@ class LoginActivity : AppCompatActivity() {
                                 }
 
                                 if(userRole.equals("Owner")) {
-                                    makeToast("DUEÑO. Variable: $userRole") //DEBUG TODO - DELETE
                                     val intent = Intent(this@LoginActivity, OwnerActivity::class.java)
                                     startActivity(intent)
+                                    finish()
                                 }else if(userRole.equals("Carer")){
-                                    makeToast("CUIDADOR. Variable: $userRole") //DEBUG TODO - DELETE
                                     val intent = Intent(this@LoginActivity, CarerActivity::class.java)
-
                                     startActivity(intent)
+                                    finish()
                                 }else {
                                     makeToast("Ejecución no supo obtener el rol: $userRole") //DEBUG TODO - DELETE
                                 }
-
-
-
-
-
                             }
-
-
                         }else{
+                            buttonLogin.isEnabled = true
                             makeToast("Credenciales incorrectas")
                         }
                     }

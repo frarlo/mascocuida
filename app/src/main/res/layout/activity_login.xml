@@ -7,24 +7,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.LoginActivity"
-    android:background="@color/mascopurple"
+    android:background="@color/lightemphasis"
     android:orientation="vertical"
     android:gravity="center">
-    
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginEnd="10dp"
+        app:strokeColor="@color/lightpurple"
+        app:strokeWidth="2dp"
+        android:backgroundTint="@color/white"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp"
-            android:background="@color/mascoemphasis">
+            android:padding="20dp">
 
             <!-- Idioma -->
             <Spinner
@@ -47,7 +49,6 @@
 
             <!-- Datos / Correo electrónico y contraseña -->
             <com.google.android.material.textfield.TextInputLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -62,15 +63,13 @@
                     android:textColorHint="@color/black"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/black" />
-
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
 
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/black"
                 >
-
                 <!-- Campo introducible-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/user_password"
@@ -80,7 +79,6 @@
                     android:textColorHint="@color/black"
                     android:inputType="textWebPassword"
                     android:textColor="@color/black" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Botón de Entrar -->
@@ -102,7 +100,7 @@
                 android:layout_gravity="center"
                 android:text="¿Aún no te has registrado?"
                 android:background="#00FFFFFF"
-                android:textColor="@color/white"/>
+                android:textColor="@color/black"/>
 
             <!-- He olvidado mis datos -->
             <Button
@@ -112,10 +110,10 @@
                 android:layout_gravity="center"
                 android:text="He olvidado mis datos"
                 android:background="#00FFFFFF"
-                android:textColor="@color/white"/>
+                android:textColor="@color/black"/>
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

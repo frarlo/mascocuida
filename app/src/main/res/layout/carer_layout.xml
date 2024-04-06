@@ -1,67 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="2dp"
-    android:layout_margin="5dp"
-    android:background="@color/mascoblue"
-    android:layout_gravity="start">
+    android:orientation="vertical"
+    android:padding="5dp">
 
-    <TextView
-        android:id="@+id/recycler_carer_name"
-        android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nombre cuidador"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:layout_gravity="start"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/recycler_carer_rating"
-        />
+        android:backgroundTint="@color/white"
+        app:strokeColor="@color/mascoblue"
+        app:strokeWidth="2sp">
 
-    <TextView
-        android:id="@+id/recycler_carer_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rating"
-        android:textColor="@color/white"
-        android:layout_marginStart="10dp"
-        android:layout_gravity="end"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.3"
-        app:layout_constraintStart_toEndOf="@id/recycler_carer_name"
-        app:layout_constraintEnd_toStartOf="@id/recycler_star"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/recycler_star"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:src="@drawable/rating_star"
-        android:layout_gravity="start"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.1"
-        app:layout_constraintStart_toEndOf="@id/recycler_carer_rating"
-        app:layout_constraintEnd_toStartOf="@id/recycler_carer_profile"
-        />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
 
-    <Button
-        android:id="@+id/recycler_carer_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ver perfil"
-        android:layout_gravity="end"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.3"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="@color/mascoemphasis"/>
+            <TextView
+                android:id="@+id/recycler_carer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rigoberto López"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:gravity="start"
+                android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/recycler_carer_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Valencia"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:gravity="start"
+                    android:layout_gravity="center_vertical"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/recycler_carer_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="5dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/recycler_star"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/rating_star"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/recycler_carer_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver perfil"
+                android:textColor="@color/white"
+                android:layout_gravity="end"
+                android:backgroundTint="@color/mascoblue"/>
+
+        </LinearLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

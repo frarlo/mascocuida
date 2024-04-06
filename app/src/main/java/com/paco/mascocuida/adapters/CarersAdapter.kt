@@ -8,17 +8,15 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.paco.mascocuida.R
-import com.paco.mascocuida.activities.ManagePetActivity
 import com.paco.mascocuida.activities.ProfileActivity
 import com.paco.mascocuida.data.Carer
-import com.paco.mascocuida.data.Pet
-import com.paco.mascocuida.data.User
 
 class CarersAdapter(private val carerList: MutableList<Carer>): RecyclerView.Adapter<CarersAdapter.ViewHolder>() {
-// TODO - Change user - carer etc
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
         private var carerName: TextView = view.findViewById(R.id.recycler_carer_name)
+        private var carerLocation: TextView = view.findViewById(R.id.recycler_carer_location)
         private var carerRating: TextView = view.findViewById(R.id.recycler_carer_rating)
         private val buttonProfile: Button = view.findViewById(R.id.recycler_carer_profile)
         private val context = view.context
@@ -26,11 +24,13 @@ class CarersAdapter(private val carerList: MutableList<Carer>): RecyclerView.Ada
         fun bindCarer(carer: Carer){
 
             carerName.text = carer.getName()
+            carerLocation.text = carer.getLocation()
             var rating = carer.getRating().toString()
             if(rating == "null"){
-                rating = "0"
+                rating = "-"
             }
             carerRating.text = rating
+
 
 
 

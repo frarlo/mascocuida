@@ -3,26 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="2dp"
-    android:layout_margin="5dp"
-    android:background="@color/mascoemphasis"
-    >
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linear_owner"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:gravity="center_vertical"
-        >
+        android:backgroundTint="@color/lightpurple"
+        app:strokeColor="@color/mascoblue"
+        app:strokeWidth="2sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linear_owner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Dueño"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
@@ -32,13 +40,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text=""
-            android:textColor="@color/white"
+            android:text="Pepe Domínguez Giráldez"
+            android:textColor="@color/black"
             android:textSize="16sp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
-
-
 
     </LinearLayout>
 
@@ -53,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Mascota"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
@@ -64,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text=""
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
@@ -90,16 +98,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Información de la solicitud"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
 
-    <TextView
-        android:id="@+id/text_serviceinfo"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/white"
-        android:layout_margin="8dp"/>
+        <TextView
+            android:id="@+id/text_serviceinfo"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
+            android:padding="5dp"
+            android:textColorHint="@color/black"
+            android:hint="Inserta aquí información útil sobre tu petición"
+            android:textColor="@color/black"
+            android:background="@color/white" />
 
     </LinearLayout>
 
@@ -107,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Fecha y hora:"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
 
@@ -116,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="El día DD/MM/YYYY a las HH:MM"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
 
@@ -146,6 +158,10 @@
            android:text="Aceptar"
            android:textColor="@color/black"/>
 
-   </LinearLayout>
+        </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
