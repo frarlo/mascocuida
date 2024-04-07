@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp"
+    android:paddingBottom="30dp"
+    android:background="@color/mascoemphasis">
+
+    <!-- Nombre y Apellidos -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Nombre"/>
+
+    <EditText
+        android:id="@+id/text_firstname"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:layout_marginBottom="10dp"
+        android:inputType="text"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Apellidos"/>
+
+    <EditText
+        android:id="@+id/text_lastname"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:layout_marginBottom="10dp"
+        android:inputType="text"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Localización"/>
+
+
+    <EditText
+        android:id="@+id/text_location"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:layout_marginBottom="10dp"
+        android:hint="Pon tu cuidad y tu barrio"
+        android:textColorHint="@color/black" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:backgroundTint="@color/mascopurple"
+        android:text="Guardar cambios"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
+</LinearLayout>

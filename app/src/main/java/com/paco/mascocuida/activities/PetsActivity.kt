@@ -51,6 +51,7 @@ class PetsActivity : AppCompatActivity() {
         buttonAdd.setOnClickListener{
             val intent = Intent(this,ManagePetActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

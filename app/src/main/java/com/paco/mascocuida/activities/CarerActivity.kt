@@ -161,4 +161,6 @@ class CarerActivity : AppCompatActivity() {
         termsSheetDialog.show()
     }
 
+
+
 }

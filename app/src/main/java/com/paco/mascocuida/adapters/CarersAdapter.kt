@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.paco.mascocuida.R
 import com.paco.mascocuida.activities.ProfileActivity
 import com.paco.mascocuida.data.Carer
+import java.text.DecimalFormat
 
 class CarersAdapter(private val carerList: MutableList<Carer>): RecyclerView.Adapter<CarersAdapter.ViewHolder>() {
 
@@ -25,11 +26,16 @@ class CarersAdapter(private val carerList: MutableList<Carer>): RecyclerView.Ada
 
             carerName.text = carer.getName()
             carerLocation.text = carer.getLocation()
-            var rating = carer.getRating().toString()
-            if(rating == "null"){
-                rating = "-"
+            val rating = carer.getRating().toString()
+            if(rating != "null"){
+                val ratingDouble = rating.toDouble()
+                // https://stackoverflow.com/a/60565028
+                val formattedRatting = "%.2f".format(ratingDouble)
+                carerRating.text = formattedRatting
+            }else{
+                carerRating.text = "-"
             }
-            carerRating.text = rating
+
 
 
 

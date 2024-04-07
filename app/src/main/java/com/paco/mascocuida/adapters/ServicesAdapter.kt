@@ -76,7 +76,7 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                     }
                     "accepted" -> {
                         buttonDecline.visibility = View.GONE
-                        buttonAccept.text = "Más info"
+                        buttonAccept.text = "Información"
                     }
                     "completed" -> {
                         buttonDecline.visibility = View.GONE
@@ -95,8 +95,8 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                         buttonDecline.text = "Cancelar solicitud"
                     }
                     "accepted" -> {
-                        buttonDecline.visibility = View.GONE
-                        buttonAccept.text = "Más info"
+                        buttonDecline.text = "Finalizar servicio"
+                        buttonAccept.text = "Información"
                     }
                     "completed" -> {
                         buttonDecline.visibility = View.GONE
@@ -138,18 +138,34 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                 }
 
                 if(userRole == "Owner"){
-                    popHeader.text = "¿Quieres cancelar la petición?"
-                    popSubHeader.text = "Tendrás que realizarla de nuevo"
-                    popUp.show()
+                    if(serviceType == "accepted"){
+                        popHeader.text = "¿Quieres finalizar el servicio?"
+                        popSubHeader.text = "El servicio pasará a estar acabado."
+                        popUp.show()
 
-                    buttonRight.setOnClickListener {
-                        // yes
-                        FirebaseDatabaseModel.removeService(serviceId)
-                        popUp.dismiss()
+                        buttonRight.setOnClickListener {
+                            // Sí
+                            FirebaseDatabaseModel.updateServiceStatus(serviceId,"completed")
+                            popUp.dismiss()
+                        }
+                        buttonLeft.setOnClickListener {
+                            popUp.dismiss()
+                        }
+                    }else{
+                        popHeader.text = "¿Quieres cancelar la petición?"
+                        popSubHeader.text = "Tendrás que realizarla de nuevo"
+                        popUp.show()
+
+                        buttonRight.setOnClickListener {
+                            // yes
+                            FirebaseDatabaseModel.removeService(serviceId)
+                            popUp.dismiss()
+                        }
+                        buttonLeft.setOnClickListener {
+                            popUp.dismiss()
+                        }
                     }
-                    buttonLeft.setOnClickListener {
-                        popUp.dismiss()
-                    }
+
                 }
 
             }
@@ -189,9 +205,6 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                         val author = userObject?.getName()
                         val carerId = service?.carerUid
 
-
-
-
                         // 2. Comprobamos si ya existe una review de este servicio:
                         CoroutineScope(Dispatchers.Main).launch {
                             if(carerId != null){
@@ -203,7 +216,6 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                                     if(author != null){
                                         showReviewSheet(context, author, serviceId, service)
                                     }
-                                    // TODO - Recalculate carer's rating based on the fresh rating and the total
                                 }else{
                                     // 2.2. Si ya existe una reseña lo mostramos con un sencillo toast:
                                     Toast.makeText(context,"Ya has dejado una opinión.",Toast.LENGTH_SHORT).show()
@@ -221,13 +233,13 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
             val viewSheet = LayoutInflater.from(context).inflate(R.layout.review_sheet, null)
             reviewSheetDialog.setContentView(viewSheet)
 
-            var ownerReview: TextView = viewSheet.findViewById(R.id.review_text)
-            var starOne: ImageView = viewSheet.findViewById(R.id.first_star)
-            var starTwo: ImageView = viewSheet.findViewById(R.id.second_star)
-            var starThree: ImageView = viewSheet.findViewById(R.id.third_star)
-            var starFour: ImageView = viewSheet.findViewById(R.id.fourth_star)
-            var starFive: ImageView = viewSheet.findViewById(R.id.fifth_star)
-            var buttonSend: Button = viewSheet.findViewById(R.id.button_send)
+            val ownerReview: TextView = viewSheet.findViewById(R.id.review_text)
+            val starOne: ImageView = viewSheet.findViewById(R.id.first_star)
+            val starTwo: ImageView = viewSheet.findViewById(R.id.second_star)
+            val starThree: ImageView = viewSheet.findViewById(R.id.third_star)
+            val starFour: ImageView = viewSheet.findViewById(R.id.fourth_star)
+            val starFive: ImageView = viewSheet.findViewById(R.id.fifth_star)
+            val buttonSend: Button = viewSheet.findViewById(R.id.button_send)
 
             reviewSheetDialog.show()
 

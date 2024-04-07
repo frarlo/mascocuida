@@ -8,16 +8,20 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.sidesheet.SideSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -44,6 +48,8 @@ class OwnerActivity : AppCompatActivity() {
     private lateinit var imageWelcome: ImageView
     private lateinit var picBitmap: Bitmap
     private lateinit var picUri: Uri
+    private lateinit var ownerObject: Owner
+    private lateinit var userId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,18 +77,18 @@ class OwnerActivity : AppCompatActivity() {
         picUri = Uri.EMPTY
 
         // Accedemos al UID del usuario y declaramos la imagen de perfil
-        val userId = auth.currentUser?.uid
+        userId = auth.currentUser?.uid.toString()
         var profilePicRef: String? = null
 
         // Lanzamos una corrutina para manejar la operación asíncrona con Firebase:
         CoroutineScope(Dispatchers.Main).launch{
 
             // Extraemos el objeto Owner que representa al usuario actual:
-            val ownerObject = FirebaseDatabaseModel.getOwnerFromFirebase(userId)
+            ownerObject = FirebaseDatabaseModel.getOwnerFromFirebase(userId)!!
 
             // Personalizamos la interfaz con su nombre e imagen (utilizamos Glide para esta última):
-            textUser.text = ownerObject?.getName()
-            profilePicRef = ownerObject?.getPic()
+            textUser.text = ownerObject.getName()
+            profilePicRef = ownerObject.getPic()
 
             Glide.with(this@OwnerActivity).load(profilePicRef).into(imageWelcome)
 
@@ -111,6 +117,7 @@ class OwnerActivity : AppCompatActivity() {
         // Listener. El usuario quiere modificar sus datos personales.
         buttonProfile.setOnClickListener {
             // TODO - Launch intent (or pop up) to personalize user's data
+            editInformation()
         }
 
         // Listener del botón de los términos:
@@ -145,15 +152,15 @@ class OwnerActivity : AppCompatActivity() {
                 imageWelcome.setImageBitmap(picBitmap)
                 picUri = uri
 
-                if(userId != null){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        // Ponemos la nueva imagen en el perfil del usuario:
-                        val profilePicUrl = FirebaseStorageModel.createProfilePic(userId,picUri)
-                        // Actualizamos su referencia en la base de datos:
-                        if(profilePicUrl != null){
-                            FirebaseDatabaseModel.updateProfilePic(userId,"owners",profilePicUrl)
-                        }
+                CoroutineScope(Dispatchers.Main).launch {
+                    // Ponemos la nueva imagen en el perfil del usuario:
+                    val profilePicUrl = FirebaseStorageModel.createProfilePic(userId,picUri)
+                    // Actualizamos su referencia en la base de datos:
+                    if(profilePicUrl != null){
+                        FirebaseDatabaseModel.updateProfilePic(userId,"owners",profilePicUrl)
+                        ownerObject.setPic(profilePicUrl)
                     }
+
                 }
             }
         }
@@ -170,5 +177,43 @@ class OwnerActivity : AppCompatActivity() {
         val viewSheet = LayoutInflater.from(this).inflate(R.layout.terms_sheet,null)
         termsSheetDialog.setContentView(viewSheet)
         termsSheetDialog.show()
+    }
+
+    private fun editInformation(){
+        val profileSheetDialog = BottomSheetDialog(this)
+        val viewSheet = LayoutInflater.from(this).inflate(R.layout.info_sheet,null)
+        profileSheetDialog.setContentView(viewSheet)
+        profileSheetDialog.show()
+
+        val editedName: EditText = viewSheet.findViewById(R.id.text_firstname)
+        val editedLastname: EditText = viewSheet.findViewById(R.id.text_lastname)
+        val editedLocation: EditText = viewSheet.findViewById(R.id.text_location)
+        val buttonSave: Button = viewSheet.findViewById(R.id.button_save)
+
+        editedName.setText(ownerObject.getName())
+        editedLastname.setText(ownerObject.getLastname())
+        editedLocation.setText(ownerObject.getLocation())
+
+        buttonSave.setOnClickListener {
+            val name = editedName.text.toString()
+            val lastname = editedLastname.text.toString()
+            val location = editedLocation.text.toString()
+
+            if(name.isNotEmpty() && lastname.isNotEmpty() && location.isNotEmpty()){
+                ownerObject.setName(name)
+                ownerObject.setLastname(lastname)
+                ownerObject.setLocation(location)
+
+                FirebaseDatabaseModel.registerOwner(userId,ownerObject)
+
+                Toast.makeText(this,"Tus datos han sido editados correctamente",Toast.LENGTH_SHORT).show()
+                textUser.text = name
+
+                profileSheetDialog.dismiss()
+
+            }else{
+                Toast.makeText(this,"Te faltan datos",Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

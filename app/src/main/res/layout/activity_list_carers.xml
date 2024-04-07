@@ -8,26 +8,66 @@
     tools:context=".activities.ListCarersActivity"
     android:background="@color/mascoemphasis"
     android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:text="Listado de cuidadores"/>
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="10dp"
+        android:gravity="end">
 
-       <!-- TODO: Order carers by rating(ASC/DESC)
-       and Location(ASC/DESC) -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ordenar por..."
+            android:textColor="@color/white"
+            android:layout_gravity="center"/>
+
         <Button
             android:id="@+id/button_sort_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="rating"/>
+            android:backgroundTint="@color/mascoblue"
+            android:layout_marginEnd="10dp"
+            android:text="Puntuación"/>
+
+        <Button
+            android:id="@+id/button_sort_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/mascoblue"
+            android:layout_marginStart="10dp"
+            android:text="Localización"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Orden actual: predeterminado"
+        android:textColor="@color/white"
+        android:paddingStart="20dp"
+        android:paddingEnd="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_carers_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </LinearLayout>

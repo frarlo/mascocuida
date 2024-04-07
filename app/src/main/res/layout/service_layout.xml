@@ -8,7 +8,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/lightpurple"
+        android:backgroundTint="@color/mascoemphasis"
         app:strokeColor="@color/mascoblue"
         app:strokeWidth="2sp">
 
