@@ -11,6 +11,36 @@
         <item>Gato</item>
     </string-array>
 
+    <string name="terms">Términos y Condiciones de Uso de Mascocuida.\n\n
+
+Los siguientes términos regulan el acceso y el uso de Mascocuida así como el tratamiento de los datos asociados. Al utilizar esta aplicación aceptas estos términos:\n\n
+
+1. Uso de la Aplicación.\n\n
+
+La aplicación Mascocuida ofrece una plataforma para conectar dueños de mascotas con cuidadores, ofreciendo servicios de cuidado, paseo, hospedaje, etc. para mascotas. Los usuarios deben utilizar esta aplicación de manera responsable y legal.\n\n
+
+2. Veracidad de los datos.\n\n
+
+Para acceder a los servicios de Mascocuida debes crear una cuenta proporcionando información veraz y completa. El responsable de esta información eres tú, Mascocuida no tiene acceso directo a tu contraseña. Es tu deber mantener estos datos de forma segura.\n\n
+
+3. Contenido de los datos.\n\n
+
+El usuario es responsable de todo el contenido que se publique en la aplicación, incluyendo fotos de perfil, fotos de usuario, reseñas, nombres de mascotas, etc. Está estrictamente prohibida la publicación de cualquier contenido que sea ilegal, ofensivo y que no te pertenezca directamente (terceros).\n\n
+
+4. Limitación de responsabilidad.\n\n
+
+Mascocuida no se hace cargo de los daños indirectos o accidentales resultantes del uso de esta aplicación.\n\n
+
+5. Modificación de los Términos.\n\n
+
+Mascocuida se reserva el derecho a modificar estos Términos y Condiciones en cualquier momento. Estas modificaciones entrarán en vigor en cualquier momento y serán comunicadas debidamente. Después de esta comunicación, se considerarán aceptados al volver a entrar a la Aplicación.\n\n
+
+6. Protección de datos.\n\n
+
+Todos los datos recogidos por Mascocuida se tratan de forma privada. Mascocuida se compromete a guardar estos datos de forma eficaz y segura. Mascocuida no cede tus datos a terceros, ni a socios, y en caso de hacerlo lo comunicaría debidamente.\n\n
+
+    </string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_profile">ProfileActivity</string>

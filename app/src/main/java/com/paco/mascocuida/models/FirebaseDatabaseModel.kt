@@ -81,6 +81,12 @@ class FirebaseDatabaseModel {
             databaseRef.child("carers").child(userId).child("pics").push().setValue(picUrl)
         }
 
+        // Función que actualiza la foto de perfil del usuario (primero borra si hay alguna y luego guarda la nueva):
+        fun updateProfilePic(userId: String, collection: String, picUrl: String){
+            databaseRef.child(collection).child(userId).child("pic").removeValue()
+            databaseRef.child(collection).child(userId).child("pic").setValue(picUrl)
+        }
+
         // Función que borra la referencia de una imagen de perfil pública al cuidador:
         fun removeCarerPic(userId: String, picId: String){
             databaseRef.child("carers").child(userId).child("pics").child(picId).removeValue()

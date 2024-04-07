@@ -2,10 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="mascopurple">#6A3DFF</color>
     <color name="lightpurple">#D8CEFC</color>
-    <color name="mascoemphasis">#42459E</color>
-    <color name="lightemphasis">#898ABB</color>
+    <color name="mascoemphasis">#4268a4</color>
+    <color name="lightemphasis">#8d7bc8</color>
+    <color name="purplebackground">#8d8bc8</color>
     <color name="mascoblue">#0050EF</color>
     <color name="redject">#FF7878</color>
     <color name="greenaccept">#90FF62</color>

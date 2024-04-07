@@ -9,8 +9,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:isScrollContainer="false"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,132 +18,130 @@
         android:gravity="center"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:paddingTop="30dp"
         android:paddingBottom="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        >
+        android:layout_marginBottom="30dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="¡Bienvenido a Mascocuida!"
-        android:textColor="@color/white"
-        android:layout_marginBottom="30dp"
-        android:textSize="25sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="¡Bienvenido a Mascocuida!"
+            android:textColor="@color/white"
+            android:layout_marginBottom="30dp"
+            android:textSize="25sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="¿Qué quieres hacer en Mascocuida?"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="¿Qué quieres hacer en Mascocuida?"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
-    <!-- ROL -->
-    <RadioGroup
-        android:id="@+id/radio_role"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-        <RadioButton
-            android:id="@+id/radio_carer_role"
+        <!-- ROL -->
+        <RadioGroup
+            android:id="@+id/radio_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:checked="true"
-            android:text="Cuidar de una mascota"/>
-        <RadioButton
-            android:id="@+id/radio_owner_role"
-            android:layout_width="wrap_content"
+            android:layout_gravity="center">
+
+            <RadioButton
+                android:id="@+id/radio_carer_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:checked="true"
+                android:text="Cuidar de una mascota"/>
+            <RadioButton
+                android:id="@+id/radio_owner_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Dejar mi mascota a alguien"/>
+
+        </RadioGroup>
+
+        <!-- Nombre y Apellidos -->
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="Dejar mi mascota a alguien"/>
-    </RadioGroup>
+            android:text="Nombre"/>
 
-    <!-- Nombre y Apellidos -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="Nombre"
-        />
-
-    <EditText
-        android:id="@+id/text_firstname"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textColor="@color/black"
-        android:background="@color/white"
-        android:layout_marginBottom="10dp"
-        android:inputType="text"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="Apellidos"/>
-
-    <EditText
-        android:id="@+id/text_lastname"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textColor="@color/black"
-        android:background="@color/white"
-        android:layout_marginBottom="10dp"
-        android:inputType="text"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="Localización"/>
-
-
-
-    <EditText
-        android:id="@+id/text_location"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textColor="@color/black"
-        android:background="@color/white"
-        android:layout_marginBottom="10dp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="Foto de perfil"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp">
-
-        <ImageView
-            android:id="@+id/image_profilepic"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginRight="30dp"
+        <EditText
+            android:id="@+id/text_firstname"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/black"
             android:background="@color/white"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"/>
+            android:layout_marginBottom="10dp"
+            android:inputType="text"/>
 
-        <Button
-            android:id="@+id/button_pic"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Selecciona una foto"/>
+            android:textColor="@color/white"
+            android:text="Apellidos"/>
 
-    </LinearLayout>
+        <EditText
+            android:id="@+id/text_lastname"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/black"
+            android:background="@color/white"
+            android:layout_marginBottom="10dp"
+            android:inputType="text"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Localización"/>
+
+
+        <EditText
+            android:id="@+id/text_location"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/black"
+            android:background="@color/white"
+            android:layout_marginBottom="10dp"
+            android:hint="Pon tu cuidad y tu barrio"
+            android:textColorHint="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Foto de perfil"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:id="@+id/image_profilepic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/white"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"/>
+
+            <Button
+                android:id="@+id/button_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Selecciona una foto"/>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -159,8 +156,7 @@
             android:textColor="@color/black"
             android:background="@color/white"
             android:layout_marginBottom="10dp"
-            android:inputType="textEmailAddress"
-            />
+            android:inputType="textEmailAddress"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -175,8 +171,7 @@
             android:textColor="@color/black"
             android:background="@color/white"
             android:layout_marginBottom="10dp"
-            android:inputType="textEmailAddress"
-            />
+            android:inputType="textEmailAddress"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -191,15 +186,7 @@
             android:textColor="@color/black"
             android:background="@color/white"
             android:layout_marginBottom="10dp"
-            android:inputType="textPassword"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:text="La contraseña ha de ser alfanumérica y tener más de seis caracteres."/>
+            android:inputType="textPassword"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -214,23 +201,43 @@
             android:textColor="@color/black"
             android:background="@color/white"
             android:layout_marginBottom="10dp"
-            android:inputType="textPassword"
-            />
+            android:inputType="textPassword" />
 
-    <!-- TODO: Aceptar términos y condiciones -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="La contraseña tiene que tener más de seis caracteres."/>
 
+        <CheckBox
+            android:id="@+id/checkbox_terms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Acepto los términos de Mascocuida"
+            android:textColor="@color/white"/>
 
-    <Button
-        android:id="@+id/button_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="50dp"
-        app:backgroundTint="@color/mascopurple"
-        android:text="Regístrate"
-        android:textColor="@color/white"
-        android:textSize="20sp">
-    </Button>
+        <TextView
+            android:id="@+id/text_terms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Pulsa aquí para leer los términos"
+            android:textColor="@color/white"
+            android:gravity="center"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/button_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="50dp"
+            app:backgroundTint="@color/mascopurple"
+            android:text="Regístrate"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
 </ScrollView>
