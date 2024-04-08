@@ -121,7 +121,6 @@
                     android:layout_margin="8dp"
                     android:padding="5dp"
                     android:textColorHint="@color/black"
-                    android:hint="Inserta aquí información útil sobre tu petición"
                     android:textColor="@color/black"
                     android:background="@color/white" />
 

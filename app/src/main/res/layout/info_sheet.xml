@@ -59,6 +59,33 @@
         android:hint="Pon tu cuidad y tu barrio"
         android:textColorHint="@color/black" />
 
+    <LinearLayout
+        android:id="@+id/layout_carer_bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Escribe algo sobre ti"/>
+
+
+        <EditText
+            android:id="@+id/text_edit_bio"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:textColor="@color/black"
+            android:background="@color/white"
+            android:layout_marginBottom="10dp"
+            android:hint="Describete en menos de 140 caracteres."
+            android:textColorHint="@color/black"
+            android:autofillHints="text" />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/button_save"
         android:layout_width="match_parent"

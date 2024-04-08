@@ -44,7 +44,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Nombre"
                     android:textSize="18sp"
                     android:textColor="@color/white"/>
 
@@ -70,7 +69,6 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:textSize="18sp"
-                    android:text="Especie"
                     android:textColor="@color/white"/>
 
             </LinearLayout>
@@ -110,8 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:textSize="16sp"
-                android:text="Tamaño"
+                android:textSize="18sp"
                 android:textColor="@color/white"/>
 
             </LinearLayout>
@@ -121,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
+                android:layout_marginEnd="70dp"
                 android:padding="10dp">
 
                 <TextView
@@ -136,8 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:textSize="16sp"
-                    android:text="Sexo"
+                    android:textSize="18sp"
                     android:textColor="@color/white"/>
 
 
@@ -150,7 +147,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="¿Está esterilizado?"
+            android:clickable="false"
+            android:text="Esterilizado"
+            android:textSize="16sp"
             app:buttonTint="@color/white"
             android:textColor="@color/white"/>
 
@@ -174,7 +173,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
+            android:clickable="false"
             android:text="Perros"
+            android:textSize="16sp"
             app:buttonTint="@color/white"
             android:textColor="@color/white"/>
 
@@ -183,8 +184,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:clickable="false"
             android:padding="10dp"
             android:text="Gatos"
+            android:textSize="16sp"
             app:buttonTint="@color/white"
             android:textColor="@color/white"/>
 

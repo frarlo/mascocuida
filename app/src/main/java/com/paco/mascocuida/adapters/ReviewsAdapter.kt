@@ -5,11 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.paco.mascocuida.R
 import com.paco.mascocuida.data.Review
 
 class ReviewsAdapter(private val reviewsMap: HashMap<String, Review>): RecyclerView.Adapter<ReviewsAdapter.ViewHolder>() {
+
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
@@ -23,6 +26,9 @@ class ReviewsAdapter(private val reviewsMap: HashMap<String, Review>): RecyclerV
         fun bindReview(review: Review?){
 
             ownerName.text = review?.getAuthor()
+            if(review?.getOpinion().isNullOrEmpty()){
+                ownerReview.isVisible = false
+            }
             ownerReview.text = review?.getOpinion()
 
             val rating = review?.getRating()
@@ -32,22 +38,22 @@ class ReviewsAdapter(private val reviewsMap: HashMap<String, Review>): RecyclerV
                     // Does nothing, 1/5 hardcoded
                 }
                 2 -> {
-                    starTwo.setBackgroundResource(R.drawable.rating_star)
+                    starTwo.setImageResource(R.drawable.rating_star)
                 }
                 3 -> {
-                    starTwo.setBackgroundResource(R.drawable.rating_star)
-                    starThree.setBackgroundResource(R.drawable.rating_star)
+                    starTwo.setImageResource(R.drawable.rating_star)
+                    starThree.setImageResource(R.drawable.rating_star)
                 }
                 4 -> {
-                    starTwo.setBackgroundResource(R.drawable.rating_star)
-                    starThree.setBackgroundResource(R.drawable.rating_star)
-                    starFour.setBackgroundResource(R.drawable.rating_star)
+                    starTwo.setImageResource(R.drawable.rating_star)
+                    starThree.setImageResource(R.drawable.rating_star)
+                    starFour.setImageResource(R.drawable.rating_star)
                 }
                 5 -> {
-                    starTwo.setBackgroundResource(R.drawable.rating_star)
-                    starThree.setBackgroundResource(R.drawable.rating_star)
-                    starFour.setBackgroundResource(R.drawable.rating_star)
-                    starFive.setBackgroundResource(R.drawable.rating_star)
+                    starTwo.setImageResource(R.drawable.rating_star)
+                    starThree.setImageResource(R.drawable.rating_star)
+                    starFour.setImageResource(R.drawable.rating_star)
+                    starFive.setImageResource(R.drawable.rating_star)
                 }
             }
         }
@@ -62,7 +68,7 @@ class ReviewsAdapter(private val reviewsMap: HashMap<String, Review>): RecyclerV
         return reviewsMap.size
     }
 
-    override fun onBindViewHolder(holder: ReviewsAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val reviewId = reviewsMap.keys.toList()[position]
         val review = reviewsMap[reviewId]
         holder.bindReview(review)

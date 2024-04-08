@@ -1,5 +1,4 @@
 package com.paco.mascocuida.activities
-
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -12,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -22,18 +22,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
 import com.paco.mascocuida.adapters.ImageAdapter
-import com.paco.mascocuida.adapters.PetsAdapter
 import com.paco.mascocuida.adapters.ReviewsAdapter
+import com.paco.mascocuida.data.Carer
 import com.paco.mascocuida.data.Pet
 import com.paco.mascocuida.data.Service
 import com.paco.mascocuida.fragments.DatePickerFragment
@@ -44,9 +44,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import java.util.UUID
 
 class ProfileActivity : AppCompatActivity() {
@@ -58,13 +55,15 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var buttonAdd: FloatingActionButton
     private lateinit var buttonRemove: FloatingActionButton
     private lateinit var profileName: TextView
+    private lateinit var profileLocation: TextView
     private lateinit var profileStars: TextView
-    private lateinit var profileBio: EditText
+    private lateinit var profileBio: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var buttonAction: Button
     private lateinit var user: FirebaseUser
     private lateinit var userUid: String
     private lateinit var picUri: Uri
+    private lateinit var profileUser: Carer
 
     // Variables que controlan la solicitud de cuidado al cuidador:
     private lateinit var spinnerPets: Spinner
@@ -95,6 +94,7 @@ class ProfileActivity : AppCompatActivity() {
         buttonAdd = findViewById(R.id.float_addpics)
         buttonRemove = findViewById(R.id.float_removepic)
         profileName = findViewById(R.id.textview_username)
+        profileLocation = findViewById(R.id.textview_location)
         profileStars = findViewById(R.id.textview_stars)
         profileBio = findViewById(R.id.text_bio)
         recyclerView = findViewById(R.id.recycler_reviews)
@@ -120,8 +120,6 @@ class ProfileActivity : AppCompatActivity() {
 
     // Función que hace que el perfil sea de sólo lectura (esta actividad la está viendo un dueño):
     private fun profileIsReadOnly(existentCarerUid: String){
-        // La biografía no se puede cambiar:
-        profileBio.isEnabled = false
         // El botón hace otra función
         buttonAction.text = "Solicitar cuidado"
 
@@ -319,7 +317,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         buttonAction.setOnClickListener {
-            //TODO: Save changes
+            editInformation()
 
         }
     }
@@ -334,7 +332,8 @@ class ProfileActivity : AppCompatActivity() {
         // Lanzamos una corrutina:
         CoroutineScope(Dispatchers.Main).launch {
             // Extraemos el objeto de usuario:
-            val profileUser = FirebaseDatabaseModel.getCarerFromFirebase(userUid)
+
+            profileUser = FirebaseDatabaseModel.getCarerFromFirebase(userUid)!!
 
             if(profileUser != null){
                 // Accedemos al campo "pics". Si no es nulo o vacío llenaremos nuestro Pager con sus imágenes de perfil con el adaptador:
@@ -353,6 +352,7 @@ class ProfileActivity : AppCompatActivity() {
                 // Accedemos al nombre, apellidos, rating, biografía y las reviews, si tuviese:
                 val userFullName = profileUser.getName() + " " + profileUser.getLastname()
                 profileName.text = userFullName
+                profileLocation.text = profileUser.getLocation()
 
                 val userRating = profileUser.getRating()
                 val formattedRating = String.format("%.2f", userRating)
@@ -374,6 +374,58 @@ class ProfileActivity : AppCompatActivity() {
                     }
                 }
 
+            }
+        }
+    }
+
+    private fun editInformation(){
+        val profileSheetDialog = BottomSheetDialog(this)
+        val viewSheet = LayoutInflater.from(this).inflate(R.layout.info_sheet,null)
+        profileSheetDialog.setContentView(viewSheet)
+        profileSheetDialog.show()
+
+        val editedName: EditText = viewSheet.findViewById(R.id.text_firstname)
+        val editedLastname: EditText = viewSheet.findViewById(R.id.text_lastname)
+        val editedLocation: EditText = viewSheet.findViewById(R.id.text_location)
+        val linearAboutMe: LinearLayout = viewSheet.findViewById(R.id.layout_carer_bio)
+        val editedAboutMe: EditText = viewSheet.findViewById(R.id.text_edit_bio)
+        val buttonSave: Button = viewSheet.findViewById(R.id.button_save)
+
+        linearAboutMe.isVisible = true
+
+        editedName.setText(profileUser.getName())
+        editedLastname.setText(profileUser.getLastname())
+        editedLocation.setText(profileUser.getLocation())
+        editedAboutMe.setText(profileUser.getAboutMe())
+
+        buttonSave.setOnClickListener {
+            val name = editedName.text.toString()
+            val lastname = editedLastname.text.toString()
+            val location = editedLocation.text.toString()
+            val aboutMe = editedAboutMe.text.toString()
+
+            if(name.isNotEmpty() && lastname.isNotEmpty() && location.isNotEmpty()){
+
+                if(aboutMe.length <= 140){
+                    profileUser.setName(name)
+                    profileUser.setLastname(lastname)
+                    profileUser.setLocation(location)
+                    profileUser.setAboutMe(aboutMe)
+
+                    FirebaseDatabaseModel.registerCarer(userUid,profileUser)
+
+                    Toast.makeText(this,"Tus datos han sido editados correctamente",Toast.LENGTH_SHORT).show()
+                    profileName.text = name + " " + lastname
+                    profileLocation.text = location
+
+                    profileSheetDialog.dismiss()
+                }else{
+                    Toast.makeText(this,"Por favor, escribe menos de 140 caracteres en acerca de ti",Toast.LENGTH_SHORT).show()
+                }
+
+
+            }else{
+                Toast.makeText(this,"Te faltan datos",Toast.LENGTH_SHORT).show()
             }
         }
     }
