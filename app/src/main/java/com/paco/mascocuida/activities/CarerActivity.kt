@@ -20,6 +20,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.sidesheet.SideSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -88,9 +89,34 @@ class CarerActivity : AppCompatActivity() {
 
         }
 
+        // Listener del botón de solicitudes:
+        buttonRequests.setOnClickListener {
+
+            // Lanzamos una corrutina para comprobar si el usuario tiene servicios por aceptar o rechazar:
+            CoroutineScope(Dispatchers.Main).launch {
+
+                val servicesMap = FirebaseDatabaseModel.listCarerServices(userId)
+                val pendingServicesMap = servicesMap.filterValues { it.status == "pending" }
+
+                // Si los tiene inicia la Actividad para mostrarlos:
+                if(pendingServicesMap.isNotEmpty()){
+                    // If yes -> Activity
+                    val intent = Intent(this@CarerActivity,ServicesActivity::class.java)
+                    intent.putExtra("typeListing","requests")
+                    intent.putExtra("userRole","Carer")
+                    startActivity(intent)
+                }else{
+                    Toast.makeText(this@CarerActivity,"No tienes solicitudes",Toast.LENGTH_SHORT).show()
+                }
+                // En caso contrario muestra un toast y evita ejecutar la Activity.
+            }
+
+        }
+
         // El usuario quiere acceder a sus servicios:
         buttonServices.setOnClickListener {
             val intent = Intent(this,ServicesActivity::class.java)
+            intent.putExtra("typeListing","others")
             intent.putExtra("userRole","Carer")
             startActivity(intent)
         }
@@ -149,8 +175,6 @@ class CarerActivity : AppCompatActivity() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-
-
     }
 
     // Función que infla un BottomSheet con los TCs:
@@ -160,7 +184,5 @@ class CarerActivity : AppCompatActivity() {
         termsSheetDialog.setContentView(viewSheet)
         termsSheetDialog.show()
     }
-
-
 
 }

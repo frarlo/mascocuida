@@ -6,36 +6,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.PetsActivity"
-    android:background="@color/mascopurple"
-    android:orientation="vertical"
-    android:padding="30dp"
-    >
+    android:background="@color/mascoemphasis"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
+        android:drawableLeft="@drawable/featured"
+        android:drawableTint="@color/white"
+        android:drawablePadding="10dp"
         android:text="Mis mascotas"
         android:textSize="20sp"
         android:layout_gravity="center"
         android:textColor="@color/white"
         />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_pets"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:padding="5dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
     <Button
         android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textColor="@color/white"
         android:text="Añade una mascota"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         app:backgroundTint="@color/mascoblue"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_pets"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+    <TextView
+        android:id="@+id/text_nopets"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:text="Aún no tienes mascotas.\n Agrega alguna!"
+        android:textColor="@color/white"
+        android:drawableRight="@drawable/info"
+        android:drawableTint="@color/white"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
 
 </LinearLayout>

@@ -7,13 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.sidesheet.SideSheetDialog
 import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
 import com.paco.mascocuida.data.Owner
@@ -27,13 +31,12 @@ import kotlinx.coroutines.launch
 class ServicesAdapter(private val servicesMap: Map<String, Service>, private val userRole: String,
     private val serviceType: String): RecyclerView.Adapter<ServicesAdapter.ViewHolder>() {
 
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private var linearLayoutOwner: LinearLayout = view.findViewById(R.id.linear_owner)
         private var userFullname: TextView = view.findViewById(R.id.text_userfullname)
         private var userPetName: TextView = view.findViewById(R.id.text_userpet)
-        private var buttonPetInfo: Button = view.findViewById(R.id.button_petinfo)
+        private var buttonPetInfo: ImageButton = view.findViewById(R.id.button_petinfo)
         private var linearLayoutInformation: LinearLayout = view.findViewById(R.id.linear_information)
         private var serviceInformation: TextView = view.findViewById(R.id.text_serviceinfo)
         private var serviceFullDate: TextView = view.findViewById(R.id.text_date)
@@ -79,6 +82,7 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                         buttonAccept.text = "Información"
                     }
                     "completed" -> {
+                        linearLayoutInformation.visibility = View.GONE
                         buttonDecline.visibility = View.GONE
                         buttonAccept.visibility = View.GONE
                     }
@@ -114,6 +118,9 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
 
             buttonPetInfo.setOnClickListener {
                 //TODO - Show all the pet's information stored in the request - Independent from userRole and service status
+                Toast.makeText(context,"Pulsado",Toast.LENGTH_SHORT).show()
+
+                showPetDialog(context,service)
             }
 
             buttonDecline.setOnClickListener {
@@ -187,6 +194,7 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                         }
                     }else if(serviceType == "accepted"){
                         buttonRight.setOnClickListener{
+                            // TODO - Chat activity? TODO
                             Toast.makeText(context,"Carer quiere información",Toast.LENGTH_SHORT).show()
 
                         }
@@ -225,6 +233,52 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                     }
                 }
             }
+        }
+
+        private fun showPetDialog(context: Context, service: Service?){
+
+            val builder = AlertDialog.Builder(context).setCancelable(true)
+            val layoutInflater = LayoutInflater.from(context)
+            val view = layoutInflater.inflate(R.layout.pet_sheet,null)
+
+
+            val petName: TextView = view.findViewById(R.id.sheet_pet_name)
+            val petSpecies: TextView = view.findViewById(R.id.sheet_pet_species)
+            val petSize: TextView = view.findViewById(R.id.sheet_pet_size)
+            val petGender: TextView = view.findViewById(R.id.sheet_pet_gender)
+            val isSterilised: CheckBox = view.findViewById(R.id.sheet_pet_sterilised)
+            val likesDogs: CheckBox = view.findViewById(R.id.sheet_pet_likesdogs)
+            val likesCats: CheckBox = view.findViewById(R.id.sheet_pet_likescats)
+            val buttonBack: Button = view.findViewById(R.id.sheet_pet_buttonback)
+
+            builder.setView(view)
+            val popUp = builder.create()
+
+            val petObject = service?.pet
+
+            if(petObject != null){
+                petName.text = petObject.getName()
+                petSpecies.text = petObject.getSpecies()
+                petSize.text = petObject.getSize()
+                petGender.text = petObject.getGender()
+                if(petObject.getIsSterilised() == true){
+                    isSterilised.isChecked = true
+                }
+                if(petObject.getLikesDogs() == true){
+                    likesDogs.isChecked = true
+                }
+                if(petObject.getLikesCats() == true){
+                    likesCats.isChecked = true
+                }
+
+                popUp.show()
+
+                buttonBack.setOnClickListener {
+                    popUp.dismiss()
+                }
+            }
+
+
         }
 
         // https://stackoverflow.com/questions/35617468/how-to-use-bottomsheetdialog

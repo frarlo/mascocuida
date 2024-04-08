@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColorHint="@color/black"
+                android:textColorHint="@color/white"
                 >
                 <!-- Campo introducible-->
                 <EditText
@@ -68,7 +68,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/black"
+                android:textColorHint="@color/white"
                 >
                 <!-- Campo introducible-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -100,7 +100,7 @@
                 android:layout_gravity="center"
                 android:text="¿Aún no te has registrado?"
                 android:background="@color/transparent"
-                android:textColor="@color/black"/>
+                android:textColor="@color/white"/>
 
             <!-- He olvidado mis datos -->
             <Button
@@ -110,7 +110,7 @@
                 android:layout_gravity="center"
                 android:text="He olvidado mis datos"
                 android:background="@color/transparent"
-                android:textColor="@color/black"/>
+                android:textColor="@color/white"/>
 
         </LinearLayout>
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ManagePetActivity"
-    android:background="@color/mascopurple"
+    android:background="@color/mascoemphasis"
     android:fillViewport="true"
     android:isScrollContainer="false"
     android:fitsSystemWindows="true">
@@ -93,11 +93,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
+
             <RadioButton
                 android:id="@+id/radio_size_small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:checked="true"
                 android:text="Pequeño (1-10 Kg)"/>
             <RadioButton
@@ -105,12 +107,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:text="Mediano (11-25 Kg)"/>
             <RadioButton
                 android:id="@+id/radio_size_large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:text="Grande (+25 Kg)"/>
         </RadioGroup>
 
@@ -131,6 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:checked="true"
                 android:text="Menos de un año (Cachorro)"/>
             <RadioButton
@@ -138,12 +143,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:text="Entre uno y diez años (Adulto)"/>
             <RadioButton
                 android:id="@+id/radio_age_senior"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:text="Más de diez años (Senior)"/>
         </RadioGroup>
 
@@ -165,6 +172,7 @@
                 android:layout_height="wrap_content"
                 android:text="Perros"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:padding="10dp"/>
 
             <CheckBox
@@ -173,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:text="Gatos"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:padding="10dp"/>
 
         </LinearLayout>
@@ -195,6 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:checked="true"
                 android:text="Macho"/>
             <RadioButton
@@ -202,6 +212,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                app:buttonTint="@color/white"
                 android:text="Hembra"/>
         </RadioGroup>
 
@@ -211,13 +222,17 @@
             android:layout_height="wrap_content"
             android:text="¿Está esterilizado?"
             android:textColor="@color/white"
+            app:buttonTint="@color/white"
             android:padding="10dp"/>
 
         <Button
             android:id="@+id/button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/save"
+            android:drawableTint="@color/white"
             android:text="Guardar"
+            android:textColor="@color/white"
             android:backgroundTint="@color/mascoblue"/>
 
         <!-- TODO: Controlar este botón si se carga una mascota -->
@@ -225,8 +240,11 @@
             android:id="@+id/button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/delete"
+            android:drawableTint="@color/white"
             android:text="Eliminar mascota"
             android:visibility="invisible"
+            android:textColor="@color/white"
             android:backgroundTint="@color/mascoblue"/>
 
     </LinearLayout>

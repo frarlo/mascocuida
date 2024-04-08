@@ -8,157 +8,175 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/mascoemphasis"
-        app:strokeColor="@color/mascoblue"
+        android:layout_margin="2dp"
+        android:backgroundTint="@color/mascoblue"
+        app:strokeColor="@color/white"
         app:strokeWidth="2sp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/linear_owner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center_vertical"
-            >
+            <LinearLayout
+                android:id="@+id/linear_owner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Dueño"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/user"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="5dp"
+                    android:text="Dueño"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
 
-        <TextView
-            android:id="@+id/text_userfullname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Pepe Domínguez Giráldez"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:id="@+id/text_userfullname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
 
-    </LinearLayout>
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:gravity="center_vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Mascota"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/featured"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="5dp"
+                    android:text="Mascota"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
 
-        <TextView
-            android:id="@+id/text_userpet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:id="@+id/text_userpet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
 
-        <Button
-            android:id="@+id/button_petinfo"
-            android:layout_width="60sp"
-            android:layout_height="50sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="+"
-            android:backgroundTint="@color/mascoblue"/>
+                <ImageButton
+                    android:id="@+id/button_petinfo"
+                    android:layout_width="50sp"
+                    android:layout_height="50sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/info"
+                    android:scaleType="fitCenter"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/mascopurple"
+                    android:contentDescription="Pet information button"
+                    app:tint="@color/white" />
 
-    </LinearLayout>
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linear_information"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/linear_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Información de la solicitud"
-        android:textColor="@color/black"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Información de la solicitud"
+                    android:textColor="@color/white"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"/>
 
-        <TextView
-            android:id="@+id/text_serviceinfo"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="8dp"
-            android:padding="5dp"
-            android:textColorHint="@color/black"
-            android:hint="Inserta aquí información útil sobre tu petición"
-            android:textColor="@color/black"
-            android:background="@color/white" />
+                <TextView
+                    android:id="@+id/text_serviceinfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:padding="5dp"
+                    android:textColorHint="@color/black"
+                    android:hint="Inserta aquí información útil sobre tu petición"
+                    android:textColor="@color/black"
+                    android:background="@color/white" />
 
-    </LinearLayout>
+            </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fecha y hora:"
-        android:textColor="@color/black"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Fecha y hora:"
+                android:drawableLeft="@drawable/time"
+                android:drawableTint="@color/white"
+                android:drawablePadding="5dp"
+                android:textColor="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"/>
 
-    <TextView
-        android:id="@+id/text_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="El día DD/MM/YYYY a las HH:MM"
-        android:textColor="@color/black"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"/>
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"/>
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:gravity="center"
-       android:layout_margin="10dp"
-       >
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:layout_margin="10dp">
 
-       <Button
-           android:id="@+id/button_decline"
-           android:layout_width="125dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="10dp"
-           android:layout_marginStart="10dp"
-           android:backgroundTint="@color/redject"
-           android:text="Rechazar"/>
+               <Button
+                   android:id="@+id/button_decline"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginEnd="10dp"
+                   android:layout_marginStart="10dp"
+                   android:backgroundTint="@color/redject"
+                   android:textColor="@color/white"
+                   android:text="Rechazar"
+                   style="?android:attr/buttonBarButtonStyle" />
 
-       <Button
-           android:id="@+id/button_accept"
-           android:layout_width="125dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="10dp"
-           android:layout_marginStart="10dp"
-           android:backgroundTint="@color/greenaccept"
-           android:text="Aceptar"
-           android:textColor="@color/black"/>
+               <Button
+                   android:id="@+id/button_accept"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginEnd="10dp"
+                   android:layout_marginStart="10dp"
+                   android:backgroundTint="@color/greenaccept"
+                   android:text="Aceptar"
+                   android:textColor="@color/black"
+                   style="?android:attr/buttonBarButtonStyle" />
 
-        </LinearLayout>
+           </LinearLayout>
 
         </LinearLayout>
 

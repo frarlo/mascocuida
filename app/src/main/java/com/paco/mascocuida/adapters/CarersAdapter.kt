@@ -37,9 +37,6 @@ class CarersAdapter(private val carerList: MutableList<Carer>): RecyclerView.Ada
             }
 
 
-
-
-
             buttonProfile.setOnClickListener {
                 val carerUid = carer.getUid()
                 val intent = Intent(context, ProfileActivity::class.java)

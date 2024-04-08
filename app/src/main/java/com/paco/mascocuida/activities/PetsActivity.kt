@@ -2,11 +2,14 @@ package com.paco.mascocuida.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.webkit.WebView.FindListener
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +24,7 @@ import kotlinx.coroutines.launch
 class PetsActivity : AppCompatActivity() {
 
     private lateinit var buttonAdd: Button
+    private lateinit var textNoPets: TextView
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +38,8 @@ class PetsActivity : AppCompatActivity() {
         }
 
         buttonAdd = findViewById(R.id.button_add)
+        textNoPets = findViewById(R.id.text_nopets)
+
         auth = Firebase.auth
         val userUid = auth.currentUser?.uid
 
@@ -44,7 +50,15 @@ class PetsActivity : AppCompatActivity() {
             val petMap = FirebaseDatabaseModel.listPets(userUid)
             val petsAdapter = PetsAdapter(petMap)
             val recyclerView: RecyclerView = findViewById(R.id.recycler_view_pets)
-            recyclerView.adapter = petsAdapter
+            if(petMap.isNotEmpty()){
+                recyclerView.adapter = petsAdapter
+            }else{
+                textNoPets.isVisible = true
+                recyclerView.isVisible = false
+                recyclerView.adapter = null
+            }
+
+
 
         }
 

@@ -8,56 +8,130 @@
     android:layout_height="match_parent"
     tools:context=".activities.ServicesActivity"
     android:padding="10dp"
-    android:background="@color/mascoblue">
+    android:background="@color/mascoemphasis">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Servicios pendientes"
-            android:textColor="@color/white"
-            android:padding="5dp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_pending"
+        <LinearLayout
+            android:id="@+id/linear_requests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-           />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Servicios en curso"
-            android:textColor="@color/white"
-            android:padding="5dp"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_accepted"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Servicios pendientes"
+                android:drawableLeft="@drawable/pending_request"
+                android:drawablePadding="10dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:padding="5dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_pending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+               />
+
+            <TextView
+                android:id="@+id/text_request"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:drawableRight="@drawable/no_request"
+                android:scaleType="fitCenter"
+                android:text="No has realizado ninguna solicitud"
+                android:textColor="@color/white"
+                android:layout_margin="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_accepted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Servicios Completados"
-            android:textColor="@color/white"
-            android:padding="5dp"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_completed"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Servicios en curso"
+                android:drawableLeft="@drawable/completed_request"
+                android:drawablePadding="10dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:padding="5dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_accepted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            <TextView
+                android:id="@+id/text_accepted"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:drawableRight="@drawable/no_request"
+                android:scaleType="fitCenter"
+                android:text="No tienes servicios en curso"
+                android:textColor="@color/white"
+                android:layout_margin="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_completed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Servicios Completados"
+                android:drawableLeft="@drawable/finished_request"
+                android:drawablePadding="10dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:padding="5dp"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_completed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            <TextView
+                android:id="@+id/text_completed"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:drawableRight="@drawable/no_request"
+                android:scaleType="fitCenter"
+                android:text="No tienes servicios completados"
+                android:textColor="@color/white"
+                android:layout_margin="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 

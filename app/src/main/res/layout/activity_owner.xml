@@ -73,6 +73,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/mascoblue"
         android:drawableLeft="@drawable/heart_line"
+        android:drawableTint="@color/white"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:text="Mis mascotas" />
@@ -84,6 +85,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/mascoblue"
         android:drawableLeft="@drawable/list_doc"
+        android:drawableTint="@color/white"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:text="Mis cuidados" />
@@ -95,6 +97,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/mascoblue"
         android:drawableLeft="@drawable/carer_search"
+        android:drawableTint="@color/white"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:text="Buscar cuidadores" />
@@ -106,6 +109,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/mascoblue"
         android:drawableLeft="@drawable/edit_pen"
+        android:drawableTint="@color/white"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:text="Modificar mis datos" />

@@ -15,7 +15,8 @@
         android:layout_margin="20dp"
         android:src="@drawable/logo_long"
         android:textSize="40sp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:contentDescription="Mascocuida logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,6 +73,7 @@
             android:layout_marginBottom="10dp"
             android:backgroundTint="@color/mascoblue"
             android:drawableLeft="@drawable/pending_request"
+            android:drawableTint="@color/white"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:text="Ver solicitudes" />
@@ -83,6 +85,7 @@
             android:layout_marginBottom="10dp"
             android:backgroundTint="@color/mascoblue"
             android:drawableLeft="@drawable/list_doc"
+            android:drawableTint="@color/white"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:text="Mis cuidados"
@@ -95,6 +98,7 @@
             android:layout_marginBottom="10dp"
             android:backgroundTint="@color/mascoblue"
             android:drawableLeft="@drawable/edit_pen"
+            android:drawableTint="@color/white"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:text="Modificar mi perfil" />
