@@ -1,7 +1,5 @@
 package com.paco.mascocuida.activities
 
-import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -26,16 +24,10 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.storage
 import com.paco.mascocuida.R
 import com.paco.mascocuida.data.Carer
 import com.paco.mascocuida.data.Owner
-import com.paco.mascocuida.data.Review
-import com.paco.mascocuida.data.Service
-import com.paco.mascocuida.data.User
 import com.paco.mascocuida.models.FirebaseAuthModel
 import com.paco.mascocuida.models.FirebaseDatabaseModel
 import com.paco.mascocuida.models.FirebaseStorageModel
@@ -130,11 +122,12 @@ class RegisterActivity : AppCompatActivity() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
+        // Listener del texto de los TCs
         termsTextAction.setOnClickListener {
             showTerms()
         }
 
-        // Listener del botón:
+        // Listener del botón de registro:
         buttonRegister.setOnClickListener{
             val userName = userName.text.toString()
             val userLastname = userLastname.text.toString()
@@ -159,7 +152,6 @@ class RegisterActivity : AppCompatActivity() {
 
                             FirebaseAuthModel.createFirebaseUser(userEmail,userPassword)
                             // Extraemos el identificador único del usuario, que lo identifica de manera única
-                            //val userId = Firebase.auth.currentUser?.uid.toString()
                             val user = FirebaseAuth.getInstance().currentUser
                             val userId = user?.uid
 
@@ -182,9 +174,6 @@ class RegisterActivity : AppCompatActivity() {
                                         val carer = Carer(userId,"Carer",userName, userLastname, userLocation,
                                             profilePicUrl,userEmail,0.0,"Escribe algo sobre ti.")
                                         FirebaseDatabaseModel.registerCarer(userId,carer)
-
-                                        // TODO - REMOVE Llamamos al método para introducirlo en la colección: // TODO - REMOVE - TODO
-                                        //FirebaseDatabaseModel.registerNewCarer(userId,newCarer) TODO: REMOVE
 
                                     }else{
                                         val owner = Owner(userId,"Owner",userName, userLastname, userLocation,
@@ -233,7 +222,6 @@ class RegisterActivity : AppCompatActivity() {
         val viewSheet = LayoutInflater.from(this).inflate(R.layout.terms_sheet,null)
         termsSheetDialog.setContentView(viewSheet)
         termsSheetDialog.show()
-
     }
 
 }

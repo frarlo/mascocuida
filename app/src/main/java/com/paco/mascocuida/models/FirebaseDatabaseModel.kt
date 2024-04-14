@@ -1,22 +1,16 @@
 package com.paco.mascocuida.models
 
-import android.provider.ContactsContract.Data
 import android.util.Log
-import com.bumptech.glide.disklrucache.DiskLruCache.Value
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.data.Carer
 import com.paco.mascocuida.data.Owner
 import com.paco.mascocuida.data.Pet
 import com.paco.mascocuida.data.Review
 import com.paco.mascocuida.data.Service
-import com.paco.mascocuida.data.User
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -26,12 +20,6 @@ class FirebaseDatabaseModel {
         // Base de datos (instancia) y referencia (abstracción de Firebase):
         private val database = FirebaseDatabase.getInstance("https://mascocuida-a-default-rtdb.europe-west1.firebasedatabase.app")
         private var databaseRef = database.reference
-
-        // Función que registra un nuevo dueño:
-        fun registerNewOwner(userId: String, newOwner: User) {
-            databaseRef.child("owners").child(userId).setValue(newOwner)
-
-        }
 
         // Función que registra a un dueño (o lo edita):
         fun registerOwner(userId: String, owner: Owner){

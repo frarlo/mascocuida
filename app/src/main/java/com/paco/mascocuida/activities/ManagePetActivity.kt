@@ -42,7 +42,6 @@ class ManagePetActivity : AppCompatActivity() {
     private lateinit var buttonSave: Button
     private lateinit var buttonDelete: Button
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -205,6 +204,8 @@ class ManagePetActivity : AppCompatActivity() {
                     launchPetsActivity()
 
                 }else{
+
+
 
                     // Creamos un nuevo objeto POJO con los campos editados:
                     val editedPet = Pet(userUid, existentPetUid, petName, petSpecies, selectedSize,

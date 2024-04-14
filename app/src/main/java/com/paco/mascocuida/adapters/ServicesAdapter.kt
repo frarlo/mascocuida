@@ -115,36 +115,38 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
 
             }
 
-
+            // Listener del botón de más información de la mascota - Muestra un diálogo con su información
             buttonPetInfo.setOnClickListener {
-                //TODO - Show all the pet's information stored in the request - Independent from userRole and service status
-                Toast.makeText(context,"Pulsado",Toast.LENGTH_SHORT).show()
-
                 showPetDialog(context,service)
             }
 
+            // Listener del botón de rechazo:
             buttonDecline.setOnClickListener {
-                //TODO - Pop-up "are you sure?" - update the Service with "status:rejected"
 
+                // Si el usuario es cuidador...
                 if(userRole == "Carer"){
+
+                    // Muestra el popup personalizado y hacemos listen sobre sus botones
                     popHeader.text = "¿Quieres rechazar la petición?"
                     popSubHeader.text = "Ya no podrás aceptarla"
                     popUp.show()
 
                     buttonRight.setOnClickListener {
-                        // UPDATE SERVICE CRUD METHOD
+                        // Actualiza el estatus del servicio en la base de datos:
                         FirebaseDatabaseModel.updateServiceStatus(serviceId,"rejected")
-                        Toast.makeText(context,"El estatus del Servicio ahora es 'rechazado'",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,"Se ha rechazado la solicitud",Toast.LENGTH_SHORT).show()
                         popUp.dismiss()
                     }
                     buttonLeft.setOnClickListener {
-                        // DOES NOTHING - GO BACK
+                        // El usuario no quiere hacer nada, cerramos el popup
                         popUp.dismiss()
-                        Toast.makeText(context,"Se ha pulsado 'Atrás'",Toast.LENGTH_SHORT).show()
                     }
                 }
 
+                // Si el usuario es dueño...
                 if(userRole == "Owner"){
+
+
                     if(serviceType == "accepted"){
                         popHeader.text = "¿Quieres finalizar el servicio?"
                         popSubHeader.text = "El servicio pasará a estar acabado."

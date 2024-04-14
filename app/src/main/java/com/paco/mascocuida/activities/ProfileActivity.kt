@@ -43,6 +43,7 @@ import com.paco.mascocuida.models.FirebaseStorageModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.w3c.dom.Text
 import java.io.ByteArrayOutputStream
 import java.util.UUID
 
@@ -64,6 +65,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userUid: String
     private lateinit var picUri: Uri
     private lateinit var profileUser: Carer
+    private var imagesMapIsInitialized = false
 
     // Variables que controlan la solicitud de cuidado al cuidador:
     private lateinit var spinnerPets: Spinner
@@ -233,17 +235,10 @@ class ProfileActivity : AppCompatActivity() {
     // Función que se encarga de que el perfil sea editable (es el propio cuidador):
     private fun profileIsEditable(){
 
-        // El botón hace la función de guardar los cambios:
-        buttonAction.text = "Guardar cambios"
-
-        // TODO - Comprobar si el imagesMap tiene algo dentro, ya que si no hay nada el botón de eliminar crashea la aplicación
-        if(::imagesMap.isInitialized && imagesMap.isNotEmpty()){
-
-        }
-        buttonRemove.visibility = View.VISIBLE
-
-        // Se podrá ver el botón de añadir fotos al perfil:
         buttonAdd.visibility = View.VISIBLE
+
+        // El botón hace la función de guardar los cambios:
+        buttonAction.text = "Editar mi información"
 
         // Para subir una foto:
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -293,11 +288,40 @@ class ProfileActivity : AppCompatActivity() {
             if (currentPosition >= 0 && currentPosition < idList.size){
                 val imageId = idList[currentPosition]
                 val imageUrl = imagesMap[imageId]
-                // Sacamos el valor de la ID de la imagen y de la URL para borrarla en la BD y en el Storage:
-                if(imageId != null && imageUrl != null){
-                    FirebaseDatabaseModel.removeCarerPic(userUid,imageId)
-                    FirebaseStorageModel.removeCarerPic(imageUrl)
+
+                // TODO - Improve
+                // Aviso de borrado:
+                val builder = AlertDialog.Builder(this).setCancelable(true)
+                val view = layoutInflater.inflate(R.layout.reusable_popup, null)
+                val buttonNo = view.findViewById<Button>(R.id.button_pop_left)
+                val buttonYes = view.findViewById<Button>(R.id.button_pop_right)
+                val textPop = view.findViewById<TextView>(R.id.pop_up_header)
+                val subTextPop = view.findViewById<TextView>(R.id.pop_up_subheader)
+                buttonNo.text = "Cancelar"
+                buttonYes.text = "Borrar"
+                textPop.text = "¿Quieres borrar esta imagen de perfil?"
+                subTextPop.text = "Esta acción la borrará y no podrás recuperarla"
+
+                builder.setView(view)
+
+                val popUp = builder.create()
+
+                popUp.show()
+
+                buttonNo.setOnClickListener {
+                    popUp.dismiss()
                 }
+
+                buttonYes.setOnClickListener {
+                    if(imageId != null && imageUrl != null){
+                        FirebaseDatabaseModel.removeCarerPic(userUid,imageId)
+                        FirebaseStorageModel.removeCarerPic(imageUrl)
+                        makeToast("La imagen se está borrando")
+                    }
+                    popUp.dismiss()
+                }
+
+
             }
         }
 
@@ -335,49 +359,51 @@ class ProfileActivity : AppCompatActivity() {
 
             profileUser = FirebaseDatabaseModel.getCarerFromFirebase(userUid)!!
 
-            if(profileUser != null){
-                // Accedemos al campo "pics". Si no es nulo o vacío llenaremos nuestro Pager con sus imágenes de perfil con el adaptador:
-                if(!profileUser.getPics().isNullOrEmpty()){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        imagesMap = FirebaseDatabaseModel.listCarerPics(userUid)
-                        val imagesAdapter = ImageAdapter(imagesMap)
-                        profilePics.adapter = imagesAdapter
-                    }
-                    // Si el usuario aún no tiene imágenes dejaremos como visible una imagen predefinida:
-                }else{
-                    defaultPic = findViewById(R.id.imageview_default)
-                    defaultPic.visibility = View.VISIBLE
+            // Accedemos al campo "pics". Si no es nulo o vacío llenaremos nuestro Pager con sus imágenes de perfil con el adaptador:
+            if(!profileUser.getPics().isNullOrEmpty()){
+                CoroutineScope(Dispatchers.Main).launch {
+                    imagesMap = FirebaseDatabaseModel.listCarerPics(userUid)
+                    val imagesAdapter = ImageAdapter(imagesMap)
+                    profilePics.adapter = imagesAdapter
+
+                    imagesMapIsInitialized = true
+                    changeButtonsVisibility()
                 }
-
-                // Accedemos al nombre, apellidos, rating, biografía y las reviews, si tuviese:
-                val userFullName = profileUser.getName() + " " + profileUser.getLastname()
-                profileName.text = userFullName
-                profileLocation.text = profileUser.getLocation()
-
-                val userRating = profileUser.getRating()
-                val formattedRating = String.format("%.2f", userRating)
-                if(userRating == null){
-                    profileStars.text = "-"
-                }else{
-                    profileStars.text = formattedRating + "/5"
-                }
-                val aboutMe = profileUser.getAboutMe()
-                profileBio.setText(aboutMe)
-
-                // TODO : Async call for reviews
-                if(!profileUser.getReviews().isNullOrEmpty()){
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val reviewsMap = FirebaseDatabaseModel.listCarerReviews(userUid)
-                        val reviewsAdapter = ReviewsAdapter(reviewsMap)
-                        recyclerView.adapter = reviewsAdapter
-                    }
-                }
-
+                // Si el usuario aún no tiene imágenes dejaremos como visible una imagen predefinida:
+            }else{
+                defaultPic = findViewById(R.id.imageview_default)
+                defaultPic.visibility = View.VISIBLE
             }
+
+            // Accedemos al nombre, apellidos, rating, biografía y las reviews, si tuviese:
+            val userFullName = profileUser.getName() + " " + profileUser.getLastname()
+            profileName.text = userFullName
+            profileLocation.text = profileUser.getLocation()
+
+            val userRating = profileUser.getRating()
+            val formattedRating = String.format("%.2f", userRating)
+            if(userRating == null){
+                profileStars.text = "-"
+            }else{
+                profileStars.text = formattedRating + "/5"
+            }
+            val aboutMe = profileUser.getAboutMe()
+            profileBio.text = aboutMe
+
+
+            if(!profileUser.getReviews().isNullOrEmpty()){
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    val reviewsMap = FirebaseDatabaseModel.listCarerReviews(userUid)
+                    val reviewsAdapter = ReviewsAdapter(reviewsMap)
+                    recyclerView.adapter = reviewsAdapter
+                }
+            }
+
         }
     }
 
+    // Función que abre un BottomSheet para editar los detalles del perfil:
     private fun editInformation(){
         val profileSheetDialog = BottomSheetDialog(this)
         val viewSheet = LayoutInflater.from(this).inflate(R.layout.info_sheet,null)
@@ -423,11 +449,21 @@ class ProfileActivity : AppCompatActivity() {
                     Toast.makeText(this,"Por favor, escribe menos de 140 caracteres en acerca de ti",Toast.LENGTH_SHORT).show()
                 }
 
-
             }else{
                 Toast.makeText(this,"Te faltan datos",Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+    // Función que cambia la visibilidad de los botones de eliminar y añadir fotografías de perfil:
+    private fun changeButtonsVisibility(){
+        if(imagesMapIsInitialized && imagesMap.isNotEmpty()){
+            buttonRemove.visibility = View.VISIBLE
+        }
+        if(imagesMapIsInitialized && imagesMap.size < 5){
+            buttonAdd.visibility = View.VISIBLE
+        }
+    }
+
     
 }

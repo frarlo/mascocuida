@@ -7,7 +7,7 @@ data class Owner(
     private var lastname: String? = null,
     private var location: String? = null,
     private var pic: String? = null,
-    private val email: String? = null,
+    private var email: String? = null,
     private val pets: HashMap<String, Pet>? = null
 ){
     fun getUid(): String?{
@@ -54,7 +54,12 @@ data class Owner(
         return email
     }
 
+    fun setEmail(email: String){
+        this.email = email
+    }
+
     fun getPets(): HashMap<String, Pet>?{
         return pets
     }
+
 }
