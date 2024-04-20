@@ -2,7 +2,6 @@ package com.paco.mascocuida.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +13,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.sidesheet.SideSheetDialog
-import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
 import com.paco.mascocuida.data.Owner
 import com.paco.mascocuida.data.Review
@@ -182,7 +178,10 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
             buttonAccept.setOnClickListener {
 
                 if(userRole == "Carer"){
-                    if(serviceType == "pending"){
+                    if(serviceType == "accepted"){
+                        Toast.makeText(context,"Carer quiere información",Toast.LENGTH_SHORT).show()
+                        // TODO - Chat Activity?
+                    }else if(serviceType == "pending"){
                         popHeader.text = "¿Quieres aceptar la petición?"
                         popSubHeader.text = "Ya no podrás rechazarla"
                         popUp.show()
@@ -190,15 +189,11 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                         buttonRight.setOnClickListener {
                             // UPDATE SERVICE CRUD METHOD
                             FirebaseDatabaseModel.updateServiceStatus(serviceId,"accepted")
+                            Toast.makeText(context,"Solicitud aceptada", Toast.LENGTH_SHORT).show()
+                            popUp.dismiss()
                         }
                         buttonLeft.setOnClickListener {
                             popUp.dismiss()
-                        }
-                    }else if(serviceType == "accepted"){
-                        buttonRight.setOnClickListener{
-                            // TODO - Chat activity? TODO
-                            Toast.makeText(context,"Carer quiere información",Toast.LENGTH_SHORT).show()
-
                         }
                     }
 
