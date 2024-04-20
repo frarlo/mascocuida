@@ -36,7 +36,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
-
+/*
+* Esta actividad maneja la lógica de registro de un nuevo usuario en nuestra aplicación.
+*/
 class RegisterActivity : AppCompatActivity() {
 
     // Declaramos las variables que recogen todos los elementos de la interfaz:
@@ -155,8 +157,6 @@ class RegisterActivity : AppCompatActivity() {
                             val user = FirebaseAuth.getInstance().currentUser
                             val userId = user?.uid
 
-                            Log.d("RegisterActivity","El UID del usuario actual es $userId")
-
                             // El userId no es nulo, así que podemos seguir con el registro de sus datos:
                             if (!userId.isNullOrEmpty()){
 
@@ -183,6 +183,7 @@ class RegisterActivity : AppCompatActivity() {
                                 }
                             }
                             makeToast("Usuario registrado exitosamente. Ahora puedes loguearte")
+
                             // Registro acabado, volvemos al login:
                             val intent = Intent(this@RegisterActivity,LoginActivity::class.java)
                             startActivity(intent)
@@ -216,7 +217,7 @@ class RegisterActivity : AppCompatActivity() {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
     }
 
-    // Función que infla un BottomSheet con los TCs:
+    // Función que infla un BottomSheet con los Términos y Condiciones de Mascocuida:
     private fun showTerms(){
         val termsSheetDialog = BottomSheetDialog(this)
         val viewSheet = LayoutInflater.from(this).inflate(R.layout.terms_sheet,null)

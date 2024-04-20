@@ -1,5 +1,10 @@
 package com.paco.mascocuida.data
 
+
+/*
+* Esta clase (data-class de Kotlin) es un constructor de un objeto tipo Dueño (owner). Incluye los getters/setters
+* para incluir una capa más de abstracción en nuestra lógica.
+*/
 data class Owner(
     private val uid: String? = null,
     private val role: String? = null,

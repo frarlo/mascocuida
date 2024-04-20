@@ -2,12 +2,10 @@ package com.paco.mascocuida.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore.Audio.Radio
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
 import android.widget.TextView
@@ -16,8 +14,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
-import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.paco.mascocuida.R
@@ -28,8 +24,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+/*
+* Esta actividad permite añadir, editar o borrar una mascota. Se podrá editar o borrar si existe un putExtra en el intent,
+* en caso contrario se estará añadiendo una mascota nueva al dueño.
+*/
 class ManagePetActivity : AppCompatActivity() {
 
+    // Declaración de los elementos de la interfaz:
     private lateinit var textLanding: TextView
     private lateinit var petName: EditText
     private lateinit var petSpecies: Spinner
@@ -52,10 +53,11 @@ class ManagePetActivity : AppCompatActivity() {
             insets
         }
 
-
+        // Accedemos al UID del usuario:
         val user = Firebase.auth.currentUser
         val userUid = user?.uid.toString()
 
+        // Inicializamos los elementos de la interfaz:
         textLanding = findViewById(R.id.text_managing_landing)
         petName = findViewById(R.id.text_pet_name)
         petSpecies = findViewById(R.id.spinner_species)
@@ -75,9 +77,11 @@ class ManagePetActivity : AppCompatActivity() {
         // como el UID de la mascota se inicializará la vista en modo de "edición", con todos los datos de la mascota
         // preproblados y con un botón adicional.
         if(existentPetUid.isNullOrEmpty()){
-            textLanding.text = "Registra una nueva mascota" // TODO - Translate
+            textLanding.text = "Registra una nueva mascota"
         }else{
             textLanding.text = "Edita tu mascota"
+
+            // Lanzamos una corrutina para llenar la vista con los datos de la mascota a editar:
             CoroutineScope(Dispatchers.Main).launch {
                 val editedPet = FirebaseDatabaseModel.listSinglePet(userUid,existentPetUid)
 
@@ -137,13 +141,10 @@ class ManagePetActivity : AppCompatActivity() {
                     buttonDelete.visibility = View.VISIBLE
 
                 }
-
             }
-
         }
 
-
-
+        // Listener del botón de guardado:
         buttonSave.setOnClickListener {
 
             val petName = petName.text.toString().trim()
@@ -152,7 +153,7 @@ class ManagePetActivity : AppCompatActivity() {
             var selectedAge: String? = null
             var selectedGender: String? = null
 
-            // BASED ON: https://mkyong.com/android/android-radio-buttons-example/
+            // Basado en: https://mkyong.com/android/android-radio-buttons-example/
             val intSize = radioGroupSize.checkedRadioButtonId
 
             if(intSize == R.id.radio_size_small){
@@ -193,27 +194,24 @@ class ManagePetActivity : AppCompatActivity() {
                     // Creamos un nuevo UID para la mascota:
                     val petUid = UUID.randomUUID().toString()
 
-                    // Creamos el objeto POJO:
+                    // Creamos el objeto de mascota:
                     val newPet = Pet(userUid, petUid, petName, petSpecies, selectedSize,
                         selectedAge, selectedGender, likesDogs, likesCats, isSterilised)
 
+                    // Lo persistimos a la base de datos y mostramos un mensaje:
                     FirebaseDatabaseModel.addPet(userUid, petUid, newPet)
-
                     Toast.makeText(this, "Se ha registrado a $petName correctamente", Toast.LENGTH_SHORT).show()
 
+                    // Llamamos al método de lanzar actividad:
                     launchPetsActivity()
-
                 }else{
 
-
-
-                    // Creamos un nuevo objeto POJO con los campos editados:
+                    // Creamos un nuevo objeto con los campos editados y el Uid existente de la mascota:
                     val editedPet = Pet(userUid, existentPetUid, petName, petSpecies, selectedSize,
                         selectedAge, selectedGender, likesDogs, likesCats, isSterilised)
 
                     FirebaseDatabaseModel.addPet(userUid, existentPetUid, editedPet)
-
-                    // TODO: Mensaje de confirmación y paso a otra actividad
+                    
                     Toast.makeText(this, "Se han modificado los datos de $petName correctamente", Toast.LENGTH_SHORT).show()
 
                     launchPetsActivity()

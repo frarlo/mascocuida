@@ -24,11 +24,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/*
+* Esta clase es un adaptador que nos permite mostrar al usuario, en este caso específico, un listado de Servicios en una vista
+* de RecyclerView. Según el rol que le pasemos y el estatus del servicio. Dado que el nucleo de nuestra aplicación es ofrecer
+* servicios de cuidado, este adaptador es el más complejo y el que más lógica implementa.
+*/
 class ServicesAdapter(private val servicesMap: Map<String, Service>, private val userRole: String,
-    private val serviceType: String): RecyclerView.Adapter<ServicesAdapter.ViewHolder>() {
+    private val serviceStatus: String): RecyclerView.Adapter<ServicesAdapter.ViewHolder>() {
 
+    // Clase principal del Adaptador. Representa cada item dentro de la lista (o Mapa):
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+        // Inicializamos todos los elementos de la vista y declaramos el contexto en caso de necesitarlo:
         private var linearLayoutOwner: LinearLayout = view.findViewById(R.id.linear_owner)
         private var userFullname: TextView = view.findViewById(R.id.text_userfullname)
         private var userPetName: TextView = view.findViewById(R.id.text_userpet)
@@ -40,12 +47,13 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
         private var buttonAccept: Button = view.findViewById(R.id.button_accept)
         private val context = view.context                                             // Needed if we want to start a new activity.
 
+        // Este método bindea el objeto a la vista:
         @SuppressLint("SetTextI18n") // Reason: Fullname concatenation should not be subjected to Translation - frarlo
-        fun bindService(serviceId: String, service: Service?, userRole: String, serviceType: String) {
+        fun bindService(serviceId: String, service: Service?, userRole: String, serviceStatus: String) {
 
             var userObject: Owner? = null
 
-            // Recuperamos toda la información del servicio con una corrutina:
+            // Lanzamos una corrutina asíncrona para recuperar toda la información del servicio:
             CoroutineScope(Dispatchers.Main).launch{
                 userObject = FirebaseDatabaseModel.getOwnerFromFirebase(service?.ownerUid)
                 userFullname.text = userObject?.getName() + " " + userObject?.getLastname()
@@ -54,6 +62,7 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                 serviceFullDate.text = "El día " + service?.date + " a las " + service?.time      // Check for I18n alternatives
             }
 
+            // Inicializamos e inflamos una vista emergente para manejar las distintas opciones que pueden pulsarse según lo visto:
             // https://stackoverflow.com/questions/45663126/unconditional-layout-inflation-from-view-adapter-kotlin
             val builder = AlertDialog.Builder(context).setCancelable(true)
             val layoutInflater = LayoutInflater.from(context)
@@ -66,40 +75,49 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
             builder.setView(view)
             val popUp = builder.create()
 
-
-            // Dependiendo del rol del usuario y del estado del servicio los botones y la visibilidad de algunos elementos cambiarán:
+            // Dependiendo del rol del usuario y del estado del servicio, los botones
+            // y la visibilidad de algunos elementos cambiarán:
             if(userRole == "Carer"){
-                when(serviceType){
+                // Según el estatus del servicio...
+                when(serviceStatus){
                     "pending" -> {
-
+                        // No cambia la visibilidad de ningún botón
                     }
                     "accepted" -> {
+                        // El botón de rechazar desaparece y cambia el nombre del botón aceptar:
                         buttonDecline.visibility = View.GONE
                         buttonAccept.text = "Información"
                     }
                     "completed" -> {
+                        // Se elimina la visibilidad de la información y de los botones.
                         linearLayoutInformation.visibility = View.GONE
                         buttonDecline.visibility = View.GONE
                         buttonAccept.visibility = View.GONE
                     }
                     "rejected" -> {
-
+                        buttonDecline.visibility = View.GONE
+                        buttonAccept.visibility = View.GONE
                     }
                 }
 
             }else if(userRole == "Owner"){
+                // Quitamos la visibilidad de la información del propio dueño (es irrelevante en este rol):
                 linearLayoutOwner.visibility = View.GONE
-                when(serviceType){
+                when(serviceStatus){
                     "pending" -> {
+                        // La visibilidad de aceptar desaparece, ya que como mucho el dueño puede cancelar la solicitud:
                         buttonAccept.visibility = View.GONE
                         buttonDecline.text = "Cancelar solicitud"
                     }
                     "accepted" -> {
+                        // Cambia el contenido de los botones:
                         buttonDecline.text = "Finalizar servicio"
                         buttonAccept.text = "Información"
                     }
                     "completed" -> {
+                        // La visibilidad de rechazar desaparece, ya que no hay nada que "completar" o "cancelar" ya:
                         buttonDecline.visibility = View.GONE
+                        // También se omite la información de la solicitud y se cambia el texto del botón:
                         linearLayoutInformation.visibility = View.GONE
                         buttonAccept.text = "Opina sobre el cuidado"
                     }
@@ -107,8 +125,6 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
 
                     }
                 }
-                // Visualización normal en caso de que esté pending (el botón lanzará un
-
             }
 
             // Listener del botón de más información de la mascota - Muestra un diálogo con su información
@@ -142,27 +158,29 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                 // Si el usuario es dueño...
                 if(userRole == "Owner"){
 
-
-                    if(serviceType == "accepted"){
+                    // Y el cuidado está en fase "aceptado". Podrá finalizarlo ya si quiere:
+                    if(serviceStatus == "accepted"){
                         popHeader.text = "¿Quieres finalizar el servicio?"
                         popSubHeader.text = "El servicio pasará a estar acabado."
                         popUp.show()
 
                         buttonRight.setOnClickListener {
-                            // Sí
+                            // Actualiza el estatus del servicio en la base de datos:
                             FirebaseDatabaseModel.updateServiceStatus(serviceId,"completed")
                             popUp.dismiss()
                         }
                         buttonLeft.setOnClickListener {
                             popUp.dismiss()
                         }
+
+                    // Si no está en esta fase, será que aún está "pending". Podrá cancelar la petición:
                     }else{
                         popHeader.text = "¿Quieres cancelar la petición?"
                         popSubHeader.text = "Tendrás que realizarla de nuevo"
                         popUp.show()
 
                         buttonRight.setOnClickListener {
-                            // yes
+                            // Eliminamos el servicio:
                             FirebaseDatabaseModel.removeService(serviceId)
                             popUp.dismiss()
                         }
@@ -170,24 +188,28 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                             popUp.dismiss()
                         }
                     }
-
                 }
-
             }
 
+            // Listener del botón de aceptar:
             buttonAccept.setOnClickListener {
 
+                // Si el usuario es cuidador:
                 if(userRole == "Carer"){
-                    if(serviceType == "accepted"){
+
+                    // Si el estatus está aceptado podrá pedir más información:
+                    if(serviceStatus == "accepted"){
+                        // TODO: Delete toast - DO Chat Activity if there is enough time:
                         Toast.makeText(context,"Carer quiere información",Toast.LENGTH_SHORT).show()
-                        // TODO - Chat Activity?
-                    }else if(serviceType == "pending"){
+
+                    // Si está en pendiente podrá aceptarla:
+                    }else if(serviceStatus == "pending"){
                         popHeader.text = "¿Quieres aceptar la petición?"
                         popSubHeader.text = "Ya no podrás rechazarla"
                         popUp.show()
 
                         buttonRight.setOnClickListener {
-                            // UPDATE SERVICE CRUD METHOD
+                            // Actualizamos la base de datos con el nuevo estatus del servicio:
                             FirebaseDatabaseModel.updateServiceStatus(serviceId,"accepted")
                             Toast.makeText(context,"Solicitud aceptada", Toast.LENGTH_SHORT).show()
                             popUp.dismiss()
@@ -196,15 +218,18 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                             popUp.dismiss()
                         }
                     }
-
                 }
 
+                // Si el usuario es el dueño:
                 if(userRole == "Owner"){
-                    if(serviceType == "accepted"){
+
+                    // Si el estatus está aceptado podrá pedir más información:
+                    if(serviceStatus == "accepted"){
+                        // TODO: Delete toast - DO Chat Activity if there is enough time:
                         Toast.makeText(context,"Owner quiere información",Toast.LENGTH_SHORT).show()
 
-                    }else if(serviceType == "completed"){
-
+                    // Si el estatus está completado...
+                    }else if(serviceStatus == "completed"){
 
                         // 1. Captamos el que sería el author de la review y el ID del cuidador que la recibe:
                         val author = userObject?.getName()
@@ -232,13 +257,15 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
             }
         }
 
+        // Función que muestra en un simple emergente toda la información de la mascota que está incluida en la solicitud:
         private fun showPetDialog(context: Context, service: Service?){
 
+            // Construimos e inflamos la vista:
             val builder = AlertDialog.Builder(context).setCancelable(true)
             val layoutInflater = LayoutInflater.from(context)
             val view = layoutInflater.inflate(R.layout.pet_sheet,null)
 
-
+            // Declaramos e inicializamos todos los elementos de la misma:
             val petName: TextView = view.findViewById(R.id.sheet_pet_name)
             val petSpecies: TextView = view.findViewById(R.id.sheet_pet_species)
             val petSize: TextView = view.findViewById(R.id.sheet_pet_size)
@@ -251,8 +278,10 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
             builder.setView(view)
             val popUp = builder.create()
 
+            // Extraemos el objeto tipo mascota de la solicitud de servicio:
             val petObject = service?.pet
 
+            // Llenamos la vista con los datos de la mascota si no es nula:
             if(petObject != null){
                 petName.text = petObject.getName()
                 petSpecies.text = petObject.getSpecies()
@@ -268,22 +297,26 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                     likesCats.isChecked = true
                 }
 
+                // Finalmente mostramos la vista:
                 popUp.show()
 
+                // Simple listener del botón para volver atrás (cerrar popUp):
                 buttonBack.setOnClickListener {
                     popUp.dismiss()
                 }
             }
-
-
         }
 
+        // Método que muestra un BottomSheet para dejar la opinión sobre un servicio de cuidado según lo visto:
         // https://stackoverflow.com/questions/35617468/how-to-use-bottomsheetdialog
         private fun showReviewSheet(context: Context, author: String, serviceId: String, service: Service?){
+
+            // Creamos e inflamos la vista:
             val reviewSheetDialog = BottomSheetDialog(context)
             val viewSheet = LayoutInflater.from(context).inflate(R.layout.review_sheet, null)
             reviewSheetDialog.setContentView(viewSheet)
 
+            // Inicializamos los elementos de la vista:
             val ownerReview: TextView = viewSheet.findViewById(R.id.review_text)
             val starOne: ImageView = viewSheet.findViewById(R.id.first_star)
             val starTwo: ImageView = viewSheet.findViewById(R.id.second_star)
@@ -292,10 +325,15 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
             val starFive: ImageView = viewSheet.findViewById(R.id.fifth_star)
             val buttonSend: Button = viewSheet.findViewById(R.id.button_send)
 
+            // Mostramos el BottomSheet:
             reviewSheetDialog.show()
 
+            // Inicializamos tanto la puntuación como la cadena de opinión:
             var serviceStars = 1
             var serviceReview = ""
+
+            // Según la estrella que pulse el usuario (de izquierda a derecha) el servicio tendrá más o menos puntuación
+            // Cambiamos dinámicamente tanto la variable de puntuación como el recurso de imagen para añadir o quitar estrellas:
 
             starOne.setOnClickListener {
                 starTwo.setImageResource(R.drawable.empty_star)
@@ -337,44 +375,58 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                 serviceStars = 5
             }
 
+            // Listener del botón de enviar opinión:
             buttonSend.setOnClickListener {
-                Toast.makeText(context,"Usuario da $serviceStars al servicio",Toast.LENGTH_SHORT).show()
+
+                // Extraemos el ID del cuidador y la puntuación:
                 val carerId = service?.carerUid
                 val rating = serviceStars
+
+                // Comprobamos que no este vacío el campo de la opinión para que no salte una excepción:
                 if(ownerReview.text.isNotEmpty()){
                     serviceReview = ownerReview.text.toString()
                 }
+                // Declaramos el texto de la opinión y creamos un objeto tipo review:
                 val opinion = serviceReview
                 val review = Review(author,rating,opinion)
 
-                if(carerId != null){
-                    // TODO - Insertar review con asincronía:
+                // Comprobamos que el ID del cuidador no sea nulo y que la opinión no tenga más de 150 caracteres:
+                if(carerId != null && opinion.length <= 150){
+
+                    // Lanzamos una corrutina para incluir la opinión en el documento del cuidador y recalcular su puntuación media:
                     CoroutineScope(Dispatchers.Main).launch {
                         FirebaseDatabaseModel.createCarerReview(carerId, serviceId, review)
-                        // Recalculamos el rating:
                         FirebaseDatabaseModel.updateCarerRatings(carerId)
+
+                        // Cerramos el pop-up y mostramos un mensaje de confirmación:
+                        reviewSheetDialog.dismiss()
+                        Toast.makeText(context, "Tu opinión ha sido publicada", Toast.LENGTH_SHORT).show()
                     }
 
+                // Si la opinión tiene más caracteres de los permitidos mostramos un toast y no persistimos el objeto:
+                }else{
+                    Toast.makeText(context,"La opinión es demasiado larga",Toast.LENGTH_SHORT).show()
                 }
-
             }
-
         }
     }
 
+    // Método predeterminado del Adaptador que retorna la vista creada por el adaptador:
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.service_layout, parent, false)
         return ViewHolder(view)
     }
 
+    // Método predeterminado del Adaptador que retorna el tamaño del HashMap de Servicios:
     override fun getItemCount(): Int {
         return servicesMap.size
     }
 
+    // Método predeterminado que bindeea cada item a la vista llamando al método:
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val serviceId = servicesMap.keys.toList()[position]
         val service = servicesMap[serviceId]
-        holder.bindService(serviceId, service, userRole, serviceType)
+        holder.bindService(serviceId, service, userRole, serviceStatus)
     }
 
 }

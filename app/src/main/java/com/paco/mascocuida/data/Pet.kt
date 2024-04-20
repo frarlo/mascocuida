@@ -2,6 +2,11 @@ package com.paco.mascocuida.data
 
 import com.google.firebase.database.IgnoreExtraProperties
 
+/*
+* Esta clase (una data-class de Kotlin) es un constructor de un objeto tipo Mascota (pet). Incluye los getters/setters
+* para incluir una capa más de abstracción en nuestra lógica y un método añadido para mostrar cada objeto instanciado
+* por su nombre.
+*/
 @IgnoreExtraProperties
 data class Pet(
     private val ownerUid: String? = null,

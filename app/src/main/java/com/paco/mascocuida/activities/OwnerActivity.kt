@@ -15,13 +15,12 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.sidesheet.SideSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -35,8 +34,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
+/*
+* Esta actividad es la pantalla de bienvenida de los usuarios con el rol Dueño. Permite acceder a todas las funciones
+* de nuestra aplicación:
+*/
 class OwnerActivity : AppCompatActivity() {
 
+    // Declaración de los elementos de la interfaz:
     private lateinit var buttonPets: Button
     private lateinit var buttonServices: Button
     private lateinit var buttonCarers: Button
@@ -74,6 +78,7 @@ class OwnerActivity : AppCompatActivity() {
         // Inicializamos la variable de Firebase Auth:
         auth = Firebase.auth
 
+        // Para evitar excepciones inicializamos la variable de tipo uri a vacía:
         picUri = Uri.EMPTY
 
         // Accedemos al UID del usuario y declaramos la imagen de perfil
@@ -89,58 +94,41 @@ class OwnerActivity : AppCompatActivity() {
             // Personalizamos la interfaz con su nombre e imagen (utilizamos Glide para esta última):
             textUser.text = ownerObject.getName()
             profilePicRef = ownerObject.getPic()
-
             Glide.with(this@OwnerActivity).load(profilePicRef).into(imageWelcome)
-
         }
 
-
-        // Listener. El usuario quiere gestionar sus mascotas.
+        // Listener. El usuario quiere gestionar sus mascotas y lleva a otra actividad:
         buttonPets.setOnClickListener {
             val intent = Intent(this,PetsActivity::class.java)
             startActivity(intent)
         }
 
-        // Listener. El usuario quiere acceder a sus cuidados.
+        // Listener. El usuario quiere acceder a sus cuidados y lleva a otra actividad:
         buttonServices.setOnClickListener {
             val intent = Intent(this, ServicesActivity::class.java)
             intent.putExtra("userRole","Owner")
             startActivity(intent)
         }
 
-        // Listener. El usuario quiere ver un listado de los cuidadores.
+        // Listener. El usuario quiere ver un listado de los cuidadores y lleva a otra actividad:
         buttonCarers.setOnClickListener {
             val intent = Intent(this, ListCarersActivity::class.java)
             startActivity(intent)
         }
 
-        // Listener. El usuario quiere modificar sus datos personales.
+        // Listener. El usuario quiere modificar sus datos personales y llama a otro método:
         buttonProfile.setOnClickListener {
-            // TODO - Launch intent (or pop up) to personalize user's data
             editInformation()
         }
 
-        // Listener del botón de los términos:
+        // Listener del botón de los términos (inicializa una función):
         buttonTerms.setOnClickListener {
             showTerms()
         }
 
-        // Listener el usuario quiere desloguearse de la aplicación:
+        // Listener del botón de deslogueo (inicializa una función):
         buttonLogout.setOnClickListener {
-            // TODO - Confirm with pop-up. If yes execute the logout.
-
-            // Inicializamos una instancia de SharedPreferences para guardar los datos de logueo:
-            val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
-            sharedPreferences.edit().apply(){
-                putString("userRole","empty")
-                apply()
-            }
-
-            FirebaseAuthModel.logoutFirebaseUser()
-
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            popUpLogout()
         }
 
         // Usamos PhotoPicker como en el Registro:
@@ -152,15 +140,16 @@ class OwnerActivity : AppCompatActivity() {
                 imageWelcome.setImageBitmap(picBitmap)
                 picUri = uri
 
+                // Lanzamos una corrutina para actualizar la imagen de perfil y su referencia en la base de datos:
                 CoroutineScope(Dispatchers.Main).launch {
-                    // Ponemos la nueva imagen en el perfil del usuario:
+
                     val profilePicUrl = FirebaseStorageModel.createProfilePic(userId,picUri)
-                    // Actualizamos su referencia en la base de datos:
+
                     if(profilePicUrl != null){
                         FirebaseDatabaseModel.updateProfilePic(userId,"owners",profilePicUrl)
                         ownerObject.setPic(profilePicUrl)
+                        Toast.makeText(this@OwnerActivity,"Imagen de perfil actualizada",Toast.LENGTH_SHORT).show()
                     }
-
                 }
             }
         }
@@ -179,41 +168,98 @@ class OwnerActivity : AppCompatActivity() {
         termsSheetDialog.show()
     }
 
+    // Función que muestra un pop-up de tipo SheetDialog para editar la información personal de forma simple:
     private fun editInformation(){
+
+        // Inflamos la vista y la mostramos:
         val profileSheetDialog = BottomSheetDialog(this)
         val viewSheet = LayoutInflater.from(this).inflate(R.layout.info_sheet,null)
         profileSheetDialog.setContentView(viewSheet)
         profileSheetDialog.show()
 
+        // Inicializamos las variables de la vista:
         val editedName: EditText = viewSheet.findViewById(R.id.text_firstname)
         val editedLastname: EditText = viewSheet.findViewById(R.id.text_lastname)
         val editedLocation: EditText = viewSheet.findViewById(R.id.text_location)
         val buttonSave: Button = viewSheet.findViewById(R.id.button_save)
 
+        // Poblamos la vista:
         editedName.setText(ownerObject.getName())
         editedLastname.setText(ownerObject.getLastname())
         editedLocation.setText(ownerObject.getLocation())
 
+        // Listener del botón de guardado:
         buttonSave.setOnClickListener {
+
+            // Obtenemos los datos de lo introducido:
             val name = editedName.text.toString()
             val lastname = editedLastname.text.toString()
             val location = editedLocation.text.toString()
 
+            // Si ningún campo esta vacío...
             if(name.isNotEmpty() && lastname.isNotEmpty() && location.isNotEmpty()){
+                // Cambiamos al objeto tipo dueño los atributos con set:
                 ownerObject.setName(name)
                 ownerObject.setLastname(lastname)
                 ownerObject.setLocation(location)
 
+                // Lo persistimos a la base de datos y mostramos un mensaje informativo:
                 FirebaseDatabaseModel.registerOwner(userId,ownerObject)
-
                 Toast.makeText(this,"Tus datos han sido editados correctamente",Toast.LENGTH_SHORT).show()
+
+                // Tenemos que actualizar la interfaz con el nuevo nombre:
                 textUser.text = name
 
+                // Cerramos el diálogo:
                 profileSheetDialog.dismiss()
 
+            // El usuario ha dejado algo sin completar:
             }else{
                 Toast.makeText(this,"Te faltan datos",Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    // Función que recoge la intención de desloguearse de la aplicación y muestra un pop-up de confirmación:
+    private fun popUpLogout(){
+
+        // Inflado del pop-up de la advertencia de deslogueo:
+        val builder = AlertDialog.Builder(this).setCancelable(true)
+        val view = layoutInflater.inflate(R.layout.reusable_popup, null)
+        val buttonNo = view.findViewById<Button>(R.id.button_pop_left)
+        val buttonYes = view.findViewById<Button>(R.id.button_pop_right)
+        val textPop = view.findViewById<TextView>(R.id.pop_up_header)
+        val subTextPop = view.findViewById<TextView>(R.id.pop_up_subheader)
+        buttonNo.text = "Volver"
+        buttonYes.text = "Salir"
+        textPop.text = "Cerrar sesión"
+        subTextPop.text = "Volverás a la pantalla de inicio"
+
+        // Lo construimos y lo mostramos:
+        builder.setView(view)
+        val popUp = builder.create()
+        popUp.show()
+
+        // Si dice no el pop-up se cierra y no pasa nada:
+        buttonNo.setOnClickListener {
+            popUp.dismiss()
+        }
+
+        // En caso contrario, el usuario confirma que quiere salir:
+        buttonYes.setOnClickListener {
+
+            // Inicializamos una instancia de SharedPreferences para actualizar los datos de logueo:
+            val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
+            sharedPreferences.edit().apply{
+                putString("userRole","empty")
+                apply()
+            }
+
+            // Lo deslogueamos y lanzamos la actividad de Login:
+            FirebaseAuthModel.logoutFirebaseUser()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }
