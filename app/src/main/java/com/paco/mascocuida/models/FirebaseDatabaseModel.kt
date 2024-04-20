@@ -14,6 +14,13 @@ import com.paco.mascocuida.data.Service
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+
+/*
+* Esta clase es un modelo que abstrae y permite acceder desde cualquier lugar de la aplicación a la base de datos
+* de Firebase, en este caso "Realtime Database". Aquí operamos con las típicas operaciones CRUD, en las cuales añadimos,
+* actualizamos, consultamos y borramos lo relacionado con los usuarios de nuestra aplicación, sus mascotas y sus servicios.
+* Por la naturaleza de la aplicación hay operaciones síncronas y asíncronas (suspend).
+*/
 class FirebaseDatabaseModel {
     companion object {
 
@@ -31,12 +38,15 @@ class FirebaseDatabaseModel {
             databaseRef.child("carers").child(userId).setValue(carer)
         }
 
-        // Función que lista todos los cuidadores que existen en nuestra aplicación:
+        // Función asíncrona que lista todos los cuidadores que existen en nuestra aplicación:
         suspend fun listAllCarers(): MutableList<Carer>{
             return suspendCoroutine {continuation ->
+
+                // Inicializamos una mutable list que de tipo Cuidador vacía y declaramos la referencia de los cuidadores:
                 val carersList = mutableListOf<Carer>()
                 val carersRef = databaseRef.child("carers")
 
+                // Para esta referencia, vamos guardando todos los valores que se encuentren en ese documento si no son nulos:
                 carersRef.addListenerForSingleValueEvent(object: ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for (carerSnapshot in snapshot.children){
@@ -48,7 +58,7 @@ class FirebaseDatabaseModel {
                         continuation.resume(carersList)
                     }
                     override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
+                        Log.d("FirebaseDatabaseModel.kt","listAllCarers() Error: $error")
                     }
                 })
             }
@@ -90,13 +100,15 @@ class FirebaseDatabaseModel {
             databaseRef.child("services").child(serviceId).removeValue()
         }
 
-        // Función que lista todos los servicios que tiene/ha tenido un cuidador:
+        // Función asíncrona que lista todos los servicios que tiene/ha tenido un cuidador:
         suspend fun listCarerServices(carerId: String?): HashMap<String, Service>{
             return suspendCoroutine { continuation ->
                 val carerServices = HashMap<String, Service>()
                 if(carerId!= null){
+                    // La referencia de la BD está en el documento "services", donde solo sacamos los valores que pertenezcan al cuidador:
                     val carerServicesRef = databaseRef.child("services").orderByChild("carerUid").equalTo(carerId)
 
+                    // Guardamos todos los servicios del cuidador en un HashMap:
                     carerServicesRef.addListenerForSingleValueEvent(object: ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             for (serviceSnapshot in snapshot.children){
@@ -106,24 +118,30 @@ class FirebaseDatabaseModel {
                                     carerServices[serviceId] = serviceObj
                                 }
                             }
-
+                            // Ya hemos extraído todos los valores, la ejecución puede continuar:
                             continuation.resume(carerServices)
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                            Log.d("FirebaseDatabaseModel.kt","Error: $error")
+                            Log.d("FirebaseDatabaseModel.kt","listCarerServices() Error: $error")
                         }
                     })
                 }
             }
         }
 
+        // Función asíncrona que comprueba si se ha realizado una opinión sobre un servicio:
         suspend fun checkCarerReview(carerId: String?, serviceId: String): Boolean {
             return suspendCoroutine { continuation ->
                 if(carerId != null){
+
+                    // La referencia de la BD se encuentra en la colección de cuidadores, específicamente
+                    // en el documento cuyo ID coincide con el pasado y accediendo al campo de "reviews" y luego al
+                    // identificador del servicio está...
                     val carerReviewsRef = databaseRef.child("carers").child(carerId)
                         .child("reviews").child(serviceId)
 
+                    // Si existe, es que ya hay una review. Si no, no:
                     carerReviewsRef.addListenerForSingleValueEvent(object: ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if(snapshot.exists()){
@@ -132,17 +150,15 @@ class FirebaseDatabaseModel {
                                 continuation.resume(false)
                             }
                         }
-
                         override fun onCancelled(error: DatabaseError) {
-                            TODO("Not yet implemented")
+                            Log.d("FirebaseDatabaseModel.kt","checkCarerReview() Error: $error")
                         }
-
                     })
                 }
-
-                }
-
+            }
         }
+
+        // Función que crea una nueva review (opinión) sobre un servicio de un cuidador:
         fun createCarerReview(carerId: String, serviceId: String, review: Review){
             databaseRef.child("carers").child(carerId).child("reviews").child(serviceId).setValue(review)
         }
@@ -150,38 +166,38 @@ class FirebaseDatabaseModel {
         // Función para listar todas las reviews de un cuidador:
         suspend fun listCarerReviews(carerId: String): HashMap<String, Review>{
             return suspendCoroutine { continuation ->
+                // Inicializamos un HashMap vacío de Reviews y obtenemos la referencia del documento del cuidador dentro
+                // de la colección de cuidadores que apunta a sus reviews:
                 val carerReviews = HashMap<String, Review>()
-                if(carerId != null){
-                    val carerReviewsRef = databaseRef.child("carers").child(carerId).child("reviews")
+                val carerReviewsRef = databaseRef.child("carers").child(carerId).child("reviews")
 
-                    carerReviewsRef.addListenerForSingleValueEvent(object: ValueEventListener{
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            for (reviewSnapshot in snapshot.children){
-                                val reviewId = reviewSnapshot.key
-                                val reviewObj = reviewSnapshot.getValue<Review>()
-                                if(reviewId != null && reviewObj != null){
-                                    carerReviews[reviewId] = reviewObj
-                                }
+                // Recorremos la referencia en busca de información.
+                carerReviewsRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        // Guardamos cada review en el HashMap si ambos no son nulos:
+                        for (reviewSnapshot in snapshot.children){
+                            val reviewId = reviewSnapshot.key
+                            val reviewObj = reviewSnapshot.getValue<Review>()
+                            if(reviewId != null && reviewObj != null){
+                                carerReviews[reviewId] = reviewObj
                             }
-                            continuation.resume(carerReviews)
                         }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            Log.d("FirebaseDatabaseModel.kt","Error while listing carer reviews: $error")
-                        }
-
-                    })
-                }
+                        // Una vez finalizado el bucle la ejecución continua:
+                        continuation.resume(carerReviews)
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("FirebaseDatabaseModel.kt","listCarerReviews() Error: $error")
+                    }
+                })
             }
         }
 
-        // Función que lista todos los servicios que ha solicitado un dueño:
-        suspend fun listOwnerServices(carerId: String?): HashMap<String, Service>{
+        // Función que lista todos los servicios que ha solicitado un dueño (funciona exactamente igual que listCarerServices):
+        suspend fun listOwnerServices(ownerId: String?): HashMap<String, Service>{
             return suspendCoroutine { continuation ->
                 val ownerServices = HashMap<String, Service>()
-                if(carerId!= null){
-                    val carerServicesRef = databaseRef.child("services").orderByChild("ownerUid").equalTo(carerId)
-
+                if(ownerId!= null){
+                    val carerServicesRef = databaseRef.child("services").orderByChild("ownerUid").equalTo(ownerId)
                     carerServicesRef.addListenerForSingleValueEvent(object: ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             for (serviceSnapshot in snapshot.children){
@@ -191,12 +207,10 @@ class FirebaseDatabaseModel {
                                     ownerServices[serviceId] = serviceObj
                                 }
                             }
-
                             continuation.resume(ownerServices)
                         }
-
                         override fun onCancelled(error: DatabaseError) {
-                            Log.d("FirebaseDatabaseModel.kt","Error while listing Owner services: $error")
+                            Log.d("FirebaseDatabaseModel.kt","listOwnerServices() Error: $error")
                         }
                     })
                 }
@@ -211,11 +225,13 @@ class FirebaseDatabaseModel {
         // Función que lista todas las referencias (enlaces) a las imágenes públicas de perfil de los cuidadores:
         suspend fun listCarerPics(userId: String?): HashMap<String,String>{
             return suspendCoroutine { continuation ->
+                // Inicializamos un HashMap vacío que guardará las imágenes (su ID y su URL):
                 val carerPics = HashMap<String, String>()
-
                 if (userId != null){
+                    // La referencia está dentro de la colección de cuidadores, en el documento cuidador y en el atributo "imagenes":
                     val carerPicsRef = databaseRef.child("carers").child(userId).child("pics")
 
+                    // Recorremos todos los valores y vamos guardando los no nulos en el HashMap:
                     carerPicsRef.addListenerForSingleValueEvent(object: ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             for (picSnapshot in snapshot.children){
@@ -225,16 +241,14 @@ class FirebaseDatabaseModel {
                                     carerPics[picId] = picUrl
                                 }
                             }
-
+                            // El bucle ha acabado y la ejecución puede reanudarse:
                             continuation.resume(carerPics)
                         }
-
                         override fun onCancelled(error: DatabaseError) {
-                            Log.d("FirebaseDatabaseModel.kt","Error while listing Carer pics: $error")
+                            Log.d("FirebaseDatabaseModel.kt","listCarerPics() Error: $error")
                         }
                     })
                 }
-
             }
         }
 
@@ -245,8 +259,10 @@ class FirebaseDatabaseModel {
             return suspendCoroutine {continuation ->
                 val petMap = HashMap<String, Pet>()
                 if(userId != null){
+                    // La referencia está dentro de la colección dueños en el documento del dueño y en el atributo de pets:
                     val ownerPetsRef = databaseRef.child("owners").child(userId).child("pets")
 
+                    // Como es habtual, recorremos todos los objetos y los guardamos si no son nulos:
                     ownerPetsRef.addListenerForSingleValueEvent(object: ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot){
                             for (petSnapshot in snapshot.children){
@@ -256,10 +272,11 @@ class FirebaseDatabaseModel {
                                     petMap[petId] = pet
                                 }
                             }
+                            // Ya ha finalizado el bucle y tenemos un HashMap de mascotas. La ejecución puede continuar:
                             continuation.resume(petMap)
                         }
                         override fun onCancelled(error: DatabaseError){
-                            Log.d("FirebaseDatabaseModel.kt","Error while listing Owner pets: $error")
+                            Log.d("FirebaseDatabaseModel.kt","listPets() Error: $error")
                         }
                     })
                 }
@@ -269,6 +286,8 @@ class FirebaseDatabaseModel {
         // Función que actualiza el rating de un cuidador cuando es llamada (cuando se realiza una nueva review):
         fun updateCarerRatings(userId: String?){
             if (userId != null){
+
+                // Establecemos la referencia dentro de la colección cuidadores, en el documento del cuidador y el atributo de opiniones:
                 val reviewsRef = databaseRef.child("carers").child(userId).child("reviews")
 
                 // Primero obtenemos la puntuación total y el total de reviews que tiene el usuario:
@@ -280,6 +299,7 @@ class FirebaseDatabaseModel {
                             val review = reviewSnapshot.getValue<Review>()
                             val rating = review?.getRating()
                             if(rating != null){
+                                // Vamos sumando el rating total y el numero de reviews:
                                 totalRating += rating
                                 totalReviews ++
                             }
@@ -290,7 +310,7 @@ class FirebaseDatabaseModel {
                         databaseRef.child("carers").child(userId).child("rating").setValue(averageRating)
                     }
                     override fun onCancelled(error: DatabaseError) {
-                        Log.d("FirebaseDatabaseModel.kt","Error while updating the Carer rating: $error")
+                        Log.d("FirebaseDatabaseModel.kt","updateCarerRatings() Error: $error")
                     }
                 })
             }
@@ -300,9 +320,12 @@ class FirebaseDatabaseModel {
         suspend fun listSinglePet(userId: String?, petUid: String?): Pet? {
             return suspendCoroutine { continuation ->
                 if(userId != null && petUid != null){
+
+                    // Referencia que apunta a la colección dueños y a la mascota dentro del cuidador cuyo ID se especifica:
                     val petRef = databaseRef.child("owners").child(userId).
                     child("pets").child(petUid)
 
+                    // Si existe el objeto la ejecución continúa y devuelve el objeto tipo Mascota:
                     petRef.addListenerForSingleValueEvent(object: ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if (snapshot.exists()){
@@ -311,7 +334,7 @@ class FirebaseDatabaseModel {
                             }
                         }
                         override fun onCancelled(error: DatabaseError) {
-                            Log.d("FirebaseDatabaseModel.kt","Error while listing the Owner pet: $error")
+                            Log.d("FirebaseDatabaseModel.kt","listSinglePet() Error: $error")
                         }
                     })
                 }
@@ -331,7 +354,7 @@ class FirebaseDatabaseModel {
                             }
                         }
                         override fun onCancelled(error: DatabaseError) {
-                            Log.d("FirebaseDatabaseModel.kt","Error while extracting the Carer object: $error")
+                            Log.d("FirebaseDatabaseModel.kt","getCarerFromFirebase() Error: $error")
                         }
                     })
                 }
@@ -351,7 +374,7 @@ class FirebaseDatabaseModel {
                             }
                         }
                         override fun onCancelled(error: DatabaseError) {
-                            Log.d("FirebaseDatabaseModel.kt","Error while extracting the Owner object: $error")
+                            Log.d("FirebaseDatabaseModel.kt","GetOwnerFromFirebase() Error: $error")
                         }
                     })
                 }
@@ -361,44 +384,39 @@ class FirebaseDatabaseModel {
         // Función que devuelve un objeto que representa a un usuario o un dueño:
         suspend fun getUserFromFirebase(userId: String?): Any? {
             return suspendCoroutine {continuation ->
-                    if(userId != null) {
-                        val ownersRef = databaseRef.child("owners").child(userId)
-                        val carersRef = databaseRef.child("carers").child(userId)
+                if(userId != null) {
 
-                        ownersRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                if (snapshot.exists()) {
-                                    Log.d("FB","Usuario es owner y ha sido encontrado, inicializando objeto")
-                                    val user = snapshot.getValue<Owner>()
-                                    Log.d("FB","Objeto $user")
-                                    continuation.resume(user)
-                                } else {
-                                    carersRef.addListenerForSingleValueEvent(object :
-                                        ValueEventListener {
-                                        override fun onDataChange(snapshot: DataSnapshot) {
-                                            if (snapshot.exists()) {
-                                                val user = snapshot.getValue<Carer>()
-                                                Log.d("FB","Objeto $user")
-                                                continuation.resume(user)
-                                            }
+                    val ownersRef = databaseRef.child("owners").child(userId)
+                    val carersRef = databaseRef.child("carers").child(userId)
+
+                    // Comprobamos si el usuario es un dueño...
+                    ownersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()) {
+                                // Existe, luego es un dueño. Extraemos objeto y continuamos la ejecución:
+                                val user = snapshot.getValue<Owner>()
+                                continuation.resume(user)
+                            } else {
+                                // En caso contrario será un cuidador. Por lo que extraeremos el objeto que le toque:
+                                carersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        if(snapshot.exists()){
+                                            val user = snapshot.getValue<Carer>()
+                                            continuation.resume(user)
                                         }
-
-                                        override fun onCancelled(error: DatabaseError) {
-                                            Log.d("FirebaseDatabaseModel.kt","Error while extracting the Carer: $error")
-                                        }
-                                    })
-                                }
-
+                                    }
+                                    override fun onCancelled(error: DatabaseError) {
+                                        Log.d("FirebaseDatabaseModel.kt","getUserFromFirebase(Carer) Error: $error")
+                                    }
+                                })
                             }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.d("FirebaseDatabaseModel.kt","Error while extracting the Owner: $error")
-
-                            }
-                        })
-                    }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("FirebaseDatabaseModel.kt","getUserFromFirebase(Owner) Error: $error")
+                        }
+                    })
                 }
+            }
         }
-
     }
 }

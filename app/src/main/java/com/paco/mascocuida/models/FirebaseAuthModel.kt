@@ -8,7 +8,11 @@ import com.google.firebase.ktx.Firebase
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-// Modelo para gestionar los
+/*
+* Esta clase es un modelo que abstrae y permite acceder desde cualquier lugar de la aplicación a la lógica
+* de autorización de Firebase Authentication. Podemos registrar y desloguear usuarios, así como envíar correos
+* electrónicos de reinicio de contraseñas.
+*/
 class FirebaseAuthModel {
     companion object {
 

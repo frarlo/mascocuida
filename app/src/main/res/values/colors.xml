@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="darkgrey">#333333</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="mascopurple">#6A3DFF</color>
     <color name="lightpurple">#D8CEFC</color>
