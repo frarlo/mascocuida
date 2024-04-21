@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mascocuida</string>
+    <string name="app_name" translatable="false">Mascocuida</string>
     <string-array name="languages">
         <item>Español</item>
         <item>Valencià</item>

@@ -1,15 +1,11 @@
 package com.paco.mascocuida.activities
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +14,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.paco.mascocuida.R
 import com.paco.mascocuida.data.Carer
@@ -29,6 +24,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/*
+ * Esta Actividad loguea a un usuario en nuestra aplicación. Comprueba los campos por si falta información e incluye
+ * dos accesos centrales. Uno para poder registrarse en la RegisterActivity y otro para poder reestablecer la contraseña
+ * en caso de haberla olvidado en una ventana emergente.
+ */
 class LoginActivity : AppCompatActivity() {
 
     // Declaramos los input y los botones:
@@ -70,8 +70,6 @@ class LoginActivity : AppCompatActivity() {
         // Inicializamos una instancia de SharedPreferences para guardar los datos de logueo:
         val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
 
-        userEmail
-
         // Listener del botón de Registro:
         buttonRegister.setOnClickListener{
             val intent = Intent(this, RegisterActivity::class.java)
@@ -93,10 +91,10 @@ class LoginActivity : AppCompatActivity() {
             // Comprobamos si el usuario ha introducido algo en los dos campos:
             if (checkFields(userEmail, userPassword)) {
                 buttonLogin.isEnabled = false
-                Log.d("LoginActivity","Usuario ha puesto email y contraseña")
+
+                // Utilizamos aquí la corrutina de Autorización de Firebase para loguear al usuario:
                 auth.signInWithEmailAndPassword(userEmail, userPassword)
                     .addOnCompleteListener(this) { task ->
-                        Log.d( "LoginActivity","Usuario se ha logueado")
                         if (task.isSuccessful) {
 
                             val user = auth.currentUser
@@ -104,9 +102,9 @@ class LoginActivity : AppCompatActivity() {
                             val userUid = user?.uid.toString()
 
                             CoroutineScope(Dispatchers.Main).launch {
-                                Log.d("LoginActivity","Lanzando corrutina para sacar el objeto con $userUid")
+
                                 val objectUser = FirebaseDatabaseModel.getUserFromFirebase(userUid)
-                                // TODO changed
+
                                 if (objectUser != null) {
                                     if(objectUser is Owner){
                                         userRole = "Owner"
@@ -116,7 +114,7 @@ class LoginActivity : AppCompatActivity() {
                                 }
 
                                 // Guardamos el rol para manejar de forma más simple el logueo automático:
-                                sharedPreferences.edit().apply(){
+                                sharedPreferences.edit().apply{
                                     putString("userRole",userRole)
                                     apply()
                                 }
@@ -129,8 +127,6 @@ class LoginActivity : AppCompatActivity() {
                                     val intent = Intent(this@LoginActivity, CarerActivity::class.java)
                                     startActivity(intent)
                                     finish()
-                                }else {
-                                    makeToast("Ejecución no supo obtener el rol: $userRole") //DEBUG TODO - DELETE
                                 }
                             }
                         }else{

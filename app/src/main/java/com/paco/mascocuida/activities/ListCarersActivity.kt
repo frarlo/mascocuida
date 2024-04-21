@@ -15,8 +15,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/*
+ * Actividad que lista todos los cuidadores que existen en nuestra aplicación. Ofrece un RecyclerView que aprovecha
+ * el adaptador personalizado (CarersAdapter). Ofrecemos también dos opciones de ordenación, para poder ordenar por
+ * puntuación media de cuidados y por localización del usuario.
+ */
 class ListCarersActivity : AppCompatActivity() {
 
+    // Declaramos los elementos de la interfaz y dos valores booleanos para invertir los resultados:
     private lateinit var sortByRating: Button
     private lateinit var sortByLocation: Button
     private lateinit var textOrder: TextView
@@ -33,6 +39,7 @@ class ListCarersActivity : AppCompatActivity() {
             insets
         }
 
+        // Inicializamos vistas y botones:
         sortByRating = findViewById(R.id.button_sort_rating)
         sortByLocation = findViewById(R.id.button_sort_location)
         textOrder = findViewById(R.id.text_order)
@@ -46,10 +53,12 @@ class ListCarersActivity : AppCompatActivity() {
             recyclerView.adapter = carersAdapter
         }
 
+        // Listener del botón de ordenación por puntuación:
         sortByRating.setOnClickListener {
             sortBy("rating")
         }
 
+        // Listener del botón de ordenación por localización:
         sortByLocation.setOnClickListener {
             sortBy("location")
         }
@@ -70,7 +79,7 @@ class ListCarersActivity : AppCompatActivity() {
                 if(!invertedRating){
                     carersList.sortByDescending{it.getRating()}
                     this@ListCarersActivity.invertedRating = true
-                    this@ListCarersActivity.textOrder.text = "Orden actual: puntuación descendiente."       //TODO - to @strings
+                    this@ListCarersActivity.textOrder.text = "Orden actual: puntuación descendiente."
                 }else{
                     carersList.sortBy{it.getRating()}
                     this@ListCarersActivity.invertedRating = false
@@ -93,6 +102,5 @@ class ListCarersActivity : AppCompatActivity() {
             val recyclerView: RecyclerView = findViewById(R.id.recycler_carers_list)
             recyclerView.adapter = carersAdapter
         }
-
     }
 }

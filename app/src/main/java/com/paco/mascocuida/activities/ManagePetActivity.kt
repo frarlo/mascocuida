@@ -11,6 +11,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -42,6 +43,7 @@ class ManagePetActivity : AppCompatActivity() {
     private lateinit var checkSterilised: CheckBox
     private lateinit var buttonSave: Button
     private lateinit var buttonDelete: Button
+    private lateinit var editedPet: Pet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +85,7 @@ class ManagePetActivity : AppCompatActivity() {
 
             // Lanzamos una corrutina para llenar la vista con los datos de la mascota a editar:
             CoroutineScope(Dispatchers.Main).launch {
-                val editedPet = FirebaseDatabaseModel.listSinglePet(userUid,existentPetUid)
+                editedPet = FirebaseDatabaseModel.listSinglePet(userUid,existentPetUid)!!
 
                 if (editedPet != null){
 
@@ -206,12 +208,26 @@ class ManagePetActivity : AppCompatActivity() {
                     launchPetsActivity()
                 }else{
 
-                    // Creamos un nuevo objeto con los campos editados y el Uid existente de la mascota:
-                    val editedPet = Pet(userUid, existentPetUid, petName, petSpecies, selectedSize,
-                        selectedAge, selectedGender, likesDogs, likesCats, isSterilised)
+                    //Modificamos el objeto con los nuevos valores en los campos:
+                    if(selectedSize != null && selectedAge != null && selectedGender != null) {
+                        editedPet.setName(petName)
+                        editedPet.setSpecies(petSpecies)
+                        editedPet.setSize(selectedSize)
+                        editedPet.setAge(selectedAge)
+                        editedPet.setGender(selectedGender)
+                        editedPet.setLikesDogs(likesDogs)
+                        editedPet.setLikesCats(likesCats)
+                        editedPet.setIsSterilised(isSterilised)
+                    }
 
+                    // Old method:
+                    // Creamos un nuevo objeto con los campos editados y el Uid existente de la mascota:
+                    // val editedPet = Pet(userUid, existentPetUid, petName, petSpecies, selectedSize,
+                    //    selectedAge, selectedGender, likesDogs, likesCats, isSterilised)
+
+                    // Añadimos la mascota a la base de datos con el método de adición, que actua de "update":
                     FirebaseDatabaseModel.addPet(userUid, existentPetUid, editedPet)
-                    
+
                     Toast.makeText(this, "Se han modificado los datos de $petName correctamente", Toast.LENGTH_SHORT).show()
 
                     launchPetsActivity()
@@ -220,33 +236,57 @@ class ManagePetActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(this,"Faltan datos...",Toast.LENGTH_SHORT).show()
             }
-
         }
 
+        // Listener del botón de bororado de mascota:
         buttonDelete.setOnClickListener {
-            // TODO: WARNING MESSAGE WITH POP UP?
-            if (existentPetUid != null){
-
-                // TODO: Comprobar si el animal está en algún servicio actual --
-
-                FirebaseDatabaseModel.removePet(userUid,existentPetUid)
-
-
-                // TODO: Volver a la vista de mascotas:
-
-
-                launchPetsActivity()
-
+            // Controlamos que el UID de la mascota no sea nulo:
+            if (existentPetUid != null) {
+                // Llamamos al método que invoca el pop-up de confirmación:
+                popUpDeletePet(userUid, existentPetUid)
             }
         }
-
     }
 
-
+    // Sencilla función que lanza la actividad de listado de mascotas:
     private fun launchPetsActivity(){
         val intent = Intent(this, PetsActivity::class.java)
         startActivity(intent)
         finish()
     }
+
+    // Función que muestra un popUp de confirmación utilizando nuestro layout reutilizable:
+    private fun popUpDeletePet(userUid: String, existentPetUid: String){
+
+        // Inflado del pop-up de la advertencia de borrado:
+        val builder = AlertDialog.Builder(this).setCancelable(true)
+        val view = layoutInflater.inflate(R.layout.reusable_popup, null)
+        val buttonNo = view.findViewById<Button>(R.id.button_pop_left)
+        val buttonYes = view.findViewById<Button>(R.id.button_pop_right)
+        val textPop = view.findViewById<TextView>(R.id.pop_up_header)
+        val subTextPop = view.findViewById<TextView>(R.id.pop_up_subheader)
+        buttonNo.text = "No"
+        buttonYes.text = "Sí"
+        textPop.text = "¿Quieres borrar esta mascota?"
+        subTextPop.text = "Aún seguirá apareciendo en servicios existentes"
+
+        // Lo construimos y lo mostramos:
+        builder.setView(view)
+        val popUp = builder.create()
+        popUp.show()
+
+        // Si dice no el pop-up se cierra y no pasa nada:
+        buttonNo.setOnClickListener {
+            popUp.dismiss()
+        }
+
+        // En caso contrario, el usuario confirma que quiere borrar la mascota seleccionada:
+        buttonYes.setOnClickListener {
+                FirebaseDatabaseModel.removePet(userUid,existentPetUid)
+                Toast.makeText(this,"La mascota se ha borrado.", Toast.LENGTH_SHORT).show()
+                launchPetsActivity()
+        }
+    }
+
 
 }
