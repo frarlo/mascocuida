@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -131,18 +132,7 @@ class CarerActivity : AppCompatActivity() {
 
         // Listener del botón de deslogueo:
         buttonLogout.setOnClickListener{
-            // Inicializamos una instancia de SharedPreferences para guardar los datos de logueo:
-            val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
-            sharedPreferences.edit().apply(){
-                putString("userRole","empty")
-                apply()
-            }
-            // Invocamos el método desde nuestro modelo de autentificación para desloguearlo:
-            FirebaseAuthModel.logoutFirebaseUser()
-            // Sacamos al usuario a la Actividad de logueo:
-            val intent = Intent(this,LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            popUpLogout()
         }
 
         // Usamos PhotoPicker como en el Registro:
@@ -180,6 +170,49 @@ class CarerActivity : AppCompatActivity() {
         val viewSheet = LayoutInflater.from(this).inflate(R.layout.terms_sheet,null)
         termsSheetDialog.setContentView(viewSheet)
         termsSheetDialog.show()
+    }
+
+    // Función que recoge la intención de desloguearse de la aplicación y muestra un pop-up de confirmación:
+    private fun popUpLogout(){
+
+        // Inflado del pop-up de la advertencia de deslogueo:
+        val builder = AlertDialog.Builder(this).setCancelable(true)
+        val view = layoutInflater.inflate(R.layout.reusable_popup, null)
+        val buttonNo = view.findViewById<Button>(R.id.button_pop_left)
+        val buttonYes = view.findViewById<Button>(R.id.button_pop_right)
+        val textPop = view.findViewById<TextView>(R.id.pop_up_header)
+        val subTextPop = view.findViewById<TextView>(R.id.pop_up_subheader)
+        buttonNo.text = "Volver"
+        buttonYes.text = "Salir"
+        textPop.text = "Cerrar sesión"
+        subTextPop.text = "Volverás a la pantalla de inicio"
+
+        // Lo construimos y lo mostramos:
+        builder.setView(view)
+        val popUp = builder.create()
+        popUp.show()
+
+        // Si dice no el pop-up se cierra y no pasa nada:
+        buttonNo.setOnClickListener {
+            popUp.dismiss()
+        }
+
+        // En caso contrario, el usuario confirma que quiere salir:
+        buttonYes.setOnClickListener {
+
+            // Inicializamos una instancia de SharedPreferences para actualizar los datos de logueo:
+            val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
+            sharedPreferences.edit().apply{
+                putString("userRole","empty")
+                apply()
+            }
+
+            // Lo deslogueamos y lanzamos la actividad de Login:
+            FirebaseAuthModel.logoutFirebaseUser()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
 }
