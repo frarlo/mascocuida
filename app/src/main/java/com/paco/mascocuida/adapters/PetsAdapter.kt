@@ -1,5 +1,6 @@
 package com.paco.mascocuida.adapters
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +26,7 @@ class PetsAdapter(private val petMap: HashMap<String, Pet>): RecyclerView.Adapte
         private var petSpecies: TextView = view.findViewById(R.id.recycler_pet_species)
         private val buttonEdit: Button = view.findViewById(R.id.recycler_pet_editbutton)
         private val context = view.context
+        private val activity = view.context as Activity
 
         // Este método bindea el objeto a la vista:
         fun bindPet(petId: String, pet: Pet?){
@@ -40,6 +42,7 @@ class PetsAdapter(private val petMap: HashMap<String, Pet>): RecyclerView.Adapte
                 val intent = Intent(context,ManagePetActivity::class.java)
                 intent.putExtra("petUid",petUid)
                 context.startActivity(intent)
+                activity.finish()
             }
         }
     }
