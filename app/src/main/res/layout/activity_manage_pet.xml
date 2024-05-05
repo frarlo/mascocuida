@@ -74,7 +74,6 @@
                 android:id="@+id/spinner_species"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:background="@color/white"
                 android:textColor="@color/black"
                 android:entries="@array/species"
                 />

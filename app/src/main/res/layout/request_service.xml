@@ -30,43 +30,65 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"
                 android:text="Introduce los datos de tu solicitud"
                 android:textColor="@color/white"
-                android:padding="5dp"/>
+               />
 
             <!-- Mascota -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"
+                android:text="Selecciona la mascota"
+                android:textColor="@color/white"/>
+
             <Spinner
                 android:id="@+id/spinner_request"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
             
             <!-- Fecha -->
             <EditText
                 android:id="@+id/edit_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:hint="Cuándo quieres el servicio"/>
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:hint="Día del servicio"/>
 
             <!-- Hora -->
             <EditText
                 android:id="@+id/edit_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:hint="¿A qué hora?"/>
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:hint="Hora del servicio"/>
 
             <EditText
                 android:id="@+id/request_text"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:inputType="textEmailAddress"
+                android:layout_height="80dp"
+                android:layout_marginBottom="5dp"
+                android:padding="2dp"
+                android:inputType="textMultiLine"
                 android:hint="Datos de interés"
                 android:background="@color/white"
                 android:textColor="@color/black"
                 android:textAlignment="textStart"
+                android:gravity="top|start"
                 />
 
             <Button
