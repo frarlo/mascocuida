@@ -86,7 +86,8 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                     "accepted" -> {
                         // El botón de rechazar desaparece y cambia el nombre del botón aceptar:
                         buttonDecline.visibility = View.GONE
-                        buttonAccept.text = "Información"
+                        // buttonAccept.text = "Información"
+                        buttonAccept.visibility = View.GONE
                     }
                     "completed" -> {
                         // Se elimina la visibilidad de la información y de los botones.
@@ -112,7 +113,8 @@ class ServicesAdapter(private val servicesMap: Map<String, Service>, private val
                     "accepted" -> {
                         // Cambia el contenido de los botones:
                         buttonDecline.text = "Finalizar servicio"
-                        buttonAccept.text = "Información"
+                        //buttonAccept.text = "Información"
+                        buttonAccept.visibility = View.GONE
                     }
                     "completed" -> {
                         // La visibilidad de rechazar desaparece, ya que no hay nada que "completar" o "cancelar" ya:

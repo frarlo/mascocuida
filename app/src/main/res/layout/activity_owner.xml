@@ -15,7 +15,8 @@
         android:layout_margin="20dp"
         android:src="@drawable/logo_long"
         android:textSize="40sp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:contentDescription="Mascocuida logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,8 +50,8 @@
 
         <ImageView
             android:id="@+id/image_welcome"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:contentDescription="User's profile pic" />
@@ -114,27 +115,26 @@
         android:textColor="@color/white"
         android:text="Modificar mis datos" />
 
+        <Button
+            android:id="@+id/button_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:textColor="@color/white"
+            android:text="Consulta los términos de Mascocuida"/>
+
+        <Button
+            android:id="@+id/button_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:textColor="@color/white"
+            android:text="Cierra tu sesión de usuario" />
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:background="@color/transparent"
-        android:textColor="@color/white"
-        android:text="Consulta los términos de Mascocuida"/>
-
-    <Button
-        android:id="@+id/button_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:background="@color/transparent"
-        android:textColor="@color/white"
-        android:text="Cierra tu sesión de usuario" />
-
 
 </LinearLayout>

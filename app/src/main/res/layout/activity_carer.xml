@@ -49,8 +49,8 @@
 
         <ImageView
             android:id="@+id/image_welcome"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:contentDescription="User's profile pic" />
